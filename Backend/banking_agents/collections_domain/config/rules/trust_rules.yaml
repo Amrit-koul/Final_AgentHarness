@@ -1,0 +1,60 @@
+# ARIA Trust Gate Configuration
+# Controls thresholds for ALLOW / REVIEW / BLOCK decisions
+# All values are tunable for demo without code changes.
+
+trust_gate:
+  # Score thresholds (0-100)
+  allow_threshold: 60          # trust_score >= 60 → ALLOW (subject to confidence)
+  review_threshold: 35         # trust_score 35-59 → REVIEW
+  block_threshold: 35          # trust_score < 35 → BLOCK
+
+  # Confidence floor — if below this, ALLOW downgrades to REVIEW
+  low_confidence_threshold: 0.50
+
+  # Penalties and boosts applied during trust scoring
+  broken_ptp_penalty: 20       # per broken PTP on commitment reliability
+  kept_ptp_boost: 15           # per honored PTP on commitment reliability
+  velocity_penalty: 10         # extra penalty for multiple broken PTPs in velocity window (days)
+  velocity_days_threshold: 60  # look-back window for velocity check
+  velocity_count_threshold: 2  # min broken PTPs in window to trigger velocity penalty
+
+  contradicted_claim_penalty: 25   # per contradicted claim on statement credibility
+  rejected_claim_penalty: 15       # per rejected claim on statement credibility
+  verified_claim_boost: 15         # per verified claim on statement credibility
+  unverified_conf_reduction: 0.20  # confidence reduction when 2+ unverified claims
+
+  # Composite weights
+  commitment_reliability_weight: 0.60
+  statement_credibility_weight: 0.40
+
+  # Life-event claims that ALWAYS require verification (never auto-allow)
+  life_event_claim_types:
+    - hospitalization
+    - medical
+    - job_loss
+    - family_emergency
+    - income_disruption
+    - natural_disaster
+    - business_loss
+    - hardship
+
+  # Personas that require trust gate pass before auto-commit
+  trust_dependent_personas:
+    - temporarily_distressed
+    - genuinely_distressed
+    - forgetful_payer
+    - the_negotiator
+    - reluctant_avoider
+
+  # Actions always blocked under BLOCK gate status
+  blocked_actions_on_block:
+    - trigger_ots
+    - trigger_restructure
+    - escalate_to_legal
+
+  # Actions always blocked under REVIEW gate status
+  requires_review_for_actions:
+    - trigger_ots
+    - trigger_restructure
+
+

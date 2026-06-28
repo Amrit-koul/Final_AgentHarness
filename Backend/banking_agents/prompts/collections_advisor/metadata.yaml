@@ -1,0 +1,9 @@
+prompt_id: collections_advisor
+version: v1.0.0
+owner: Collections Operations
+risk_level: high
+default_model: deterministic_rules_first
+status: active
+created_at: "2026-06-25"
+updated_at: "2026-06-25"
+description: Produces safe Collections guidance using account evidence, scores, trust gates, and policy routing.

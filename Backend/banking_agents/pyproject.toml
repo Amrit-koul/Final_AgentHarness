@@ -1,0 +1,27 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "banking_agents"
+version = "0.1.0"
+description = "Modular banking agents backend"
+requires-python = ">=3.10"
+dependencies = [
+    "groq",
+    "python-dotenv",
+    "fastapi",
+    "uvicorn",
+    "pydantic",
+    "sentence-transformers",
+    "chromadb",
+    "pyyaml",
+    "python-docx"
+]
+
+[tool.setuptools.packages.find]
+where = [".."]
+include = ["banking_agents*"]
+
+[tool.setuptools.package-data]
+banking_agents = ["config/*.yaml"]

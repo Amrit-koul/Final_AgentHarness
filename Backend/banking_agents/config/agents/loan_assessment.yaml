@@ -1,0 +1,21 @@
+agent_id: loan_assessment_agent
+name: Loan Assessment Agent
+owner: Retail Credit Risk
+business_function: Loan Eligibility
+agent_type: internal
+execution_mode: workflow
+adapter_type: python_function
+entrypoint: banking_agents.agents.control_plane_plugins.internal.loan_assessment
+description: Existing four-stage Loan Eligibility RAG assessment.
+input_schema: {type: object, required: [profile], properties: {query: {type: string}, profile: {type: object}, session_id: {type: string}}}
+output_schema: {type: object, required: [eligibility_assessment], properties: {eligibility_assessment: {type: string}}}
+state_schema: {type: object, properties: {assessment_stage: {type: string}}}
+memory_schema: {type: object, properties: {prior_assessments: {type: array}}}
+skills: [credit_policy_retrieval, eligibility_calculation]
+tools: [document_search, eligibility_checker]
+prompts: [eligibility_reasoning:v1, risk_explanation:v1, banking_guardrails:v1, pii_redaction:v1]
+model_preferences: {primary: llama-3.3-70b-versatile}
+policy_permissions: {allowed_tools: [document_search, eligibility_checker, invoke], allowed_actions: [invoke], allowed_data_scopes: [loan_policy, applicant_profile], requires_human_approval_for: [final_approval]}
+guardrails: [prompt_injection, pii_leakage, regulatory_advice, business_scope]
+observability_hooks: {execution_trace: true, agent_run: true, policy_decision: true}
+status: active

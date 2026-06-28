@@ -1,0 +1,22 @@
+default:
+  failure_window: 5
+  failure_threshold: 3
+  min_confidence: 0.5
+  max_avg_latency_ms: 8000
+  policy_block_threshold: 3
+rag:
+  min_groundedness: 0.55
+  min_semantic_similarity: 0.50
+  min_citation_coverage: 0.50
+  min_llm_judge_score: 0.60
+  min_answer_relevance: 0.55
+actions:
+  on_failure_degradation: review
+  on_quality_degradation: review
+  on_repeated_blocks: review
+  on_critical_guardrail: quarantined
+collections_workflow_agent:
+  max_avg_latency_ms: 12000
+policy_assistant_agent:
+  rag:
+    min_groundedness: 0.60

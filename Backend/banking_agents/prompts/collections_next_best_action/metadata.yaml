@@ -1,0 +1,9 @@
+prompt_id: collections_next_best_action
+version: v1.0.0
+owner: Collections Operations
+risk_level: high
+default_model: llama-3.1-8b-instant
+status: active
+created_at: "2026-06-25"
+updated_at: "2026-06-25"
+description: Determines next best collections action using WHO-WHAT-WHEN reasoning.

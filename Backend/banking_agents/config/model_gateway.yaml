@@ -1,0 +1,6 @@
+model_gateway:
+  provider: groq
+  environment_key: GROQ_API_KEY
+  timeout_seconds: 30
+  retries: 1
+  policy: use_agent_model_preferences

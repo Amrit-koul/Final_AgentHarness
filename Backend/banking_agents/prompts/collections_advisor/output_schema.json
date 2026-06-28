@@ -1,0 +1,13 @@
+{
+  "type": "object",
+  "required": ["recommended_action", "rationale", "score_summary", "trust_gate_status", "human_approval_required", "verification_needs"],
+  "properties": {
+    "recommended_action": { "type": "string" },
+    "rationale": { "type": "string" },
+    "score_summary": { "type": "object" },
+    "trust_gate_status": { "type": "string" },
+    "human_approval_required": { "type": "boolean" },
+    "customer_safe_language": { "type": "string" },
+    "verification_needs": { "type": "array", "items": { "type": "string" } }
+  }
+}

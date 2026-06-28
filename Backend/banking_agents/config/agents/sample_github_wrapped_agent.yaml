@@ -1,0 +1,38 @@
+agent_id: sample_github_wrapped_agent
+name: Sample GitHub Wrapped Agent
+owner: Platform / Vendor Integration
+business_function: External Agent Integration
+agent_type: external
+execution_mode: synchronous
+adapter_type: python_function
+entrypoint: banking_agents.external_plugins.sample_github_wrapped_agent.wrapper.invoke
+description: Demo-safe wrapper boundary around reviewed, vendored repository code; not arbitrary GitHub execution.
+input_schema:
+  type: object
+  required: [query]
+  properties:
+    query: {type: string}
+output_schema:
+  type: object
+  required: [status, result, source, trace_id]
+  properties:
+    status: {type: string}
+    result: {type: string}
+    source: {type: string}
+    trace_id: {type: string}
+state_schema: {type: object}
+memory_schema: {type: object}
+skills: [repository_wrapper, vendor_response_normalization]
+tools: [wrapped_repository_call]
+prompts: []
+model_preferences: {}
+policy_permissions:
+  allowed_tools: [wrapped_repository_call]
+  allowed_actions: [invoke]
+  allowed_data_scopes: []
+  requires_human_approval_for: []
+guardrails: [pii_leakage, unsafe_sql, prompt_injection, business_scope]
+observability_hooks: {execution_trace: true, policy_decision: true, audit: true, usage_cost: true}
+metadata:
+  timeout_seconds: 30
+status: active

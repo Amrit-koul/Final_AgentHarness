@@ -1,0 +1,86 @@
+version: "1.0"
+
+enabled: true
+
+provider:
+  name: groq
+  api_key_env: GROQ_API_KEY
+  model_env: LLM_JUDGE_MODEL
+  default_model: llama-3.1-8b-instant
+  timeout_seconds: 8
+  max_retries: 1
+
+runtime:
+  skip_judge_on_deterministic_block: true
+  fail_closed_for_high_risk: false
+  persist_raw_response: false
+  redact_inputs: true
+  max_payload_chars: 3000
+
+decision_policy:
+  allow_judge_to_escalate: true
+  allow_judge_to_downgrade: false
+  default_if_not_configured: not_run
+  default_if_timeout: not_run
+  default_if_error: not_run
+
+tasks:
+  collections_conduct:
+    enabled: true
+    actions:
+      - send_collection_message
+      - generate_call_script
+      - recommend_field_visit
+      - escalate_to_legal
+    review_threshold: 0.55
+    block_threshold: 0.85
+
+  payment_waiver_language:
+    enabled: true
+    actions:
+      - send_payment_message
+      - create_payment_link
+      - offer_settlement
+      - approve_waiver
+      - reverse_charge
+      - modify_due_date
+    review_threshold: 0.50
+    block_threshold: 0.90
+
+  regulatory_boundary:
+    enabled: true
+    actions:
+      - answer_policy_question
+      - summarize_regulation
+      - recommend_product
+      - give_legal_advice
+    review_threshold: 0.55
+    block_threshold: 0.85
+
+  external_pii_risk:
+    enabled: true
+    actions:
+      - external_api_call
+      - vendor_agent_invoke
+      - send_webhook
+    review_threshold: 0.50
+    block_threshold: 0.80
+
+  prompt_injection:
+    enabled: true
+    actions:
+      - answer_policy_question
+      - execute_prompt
+      - invoke_agent
+      - change_prompt_version
+    review_threshold: 0.45
+    block_threshold: 0.75
+
+  rag_answer_support:
+    enabled: true
+    actions:
+      - answer_policy_question
+      - summarize_regulation
+      - loan_assessment_answer
+    review_threshold: 0.55
+    block_threshold: 0.85

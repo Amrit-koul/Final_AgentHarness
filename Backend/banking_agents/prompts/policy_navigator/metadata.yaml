@@ -1,0 +1,9 @@
+prompt_id: policy_navigator
+version: v1.0.0
+owner: Retail Banking Policy
+risk_level: medium
+default_model: llama-3.1-8b-instant
+status: active
+created_at: "2026-06-25"
+updated_at: "2026-06-25"
+description: Generates grounded policy guidance from retrieved bank policy context.

@@ -1,0 +1,141 @@
+agent_id: collections_workflow_agent
+name: Collections Workflow Agent
+owner: Collections Operations / Risk
+business_function: Collections Operations
+agent_type: external_plugin
+plugin_source: github_wrapped_workflow
+execution_mode: workflow
+internal_orchestration: langgraph
+adapter_type: python_function
+entrypoint: banking_agents.external_plugins.collections_working_demo.wrapper.invoke
+description: >
+  Wrapped Collections workflow plugin onboarded from standalone Collections Intelligence system
+  (CollectionAgent-trust-layer). Provides pre-call five-score intelligence, LLM-based conversation
+  analysis (Groq / LLaMA), post-call trust governance, persona and NBA updates, review case creation,
+  and persisted audit history. Voice pipeline (Groq Whisper STT + LLaMA + Orpheus TTS) is migrated
+  and available at backend endpoints; browser microphone frontend wiring is pending.
+input_schema:
+  type: object
+  required: [account_id]
+  properties:
+    mode:
+      type: string
+      enum: [pre_call, post_call, full_lifecycle, voice_greet, voice_analyze]
+      default: pre_call
+    account_id:
+      type: string
+    transcript:
+      type: string
+      description: Raw call transcript text — backend extracts all evidence, do not send pre-extracted fields
+    captured_transcript_id:
+      type: string
+      description: ID of a captured sample transcript from the library
+    override_persona:
+      type: string
+    new_claims:
+      type: array
+    call_metadata:
+      type: object
+output_schema:
+  type: object
+  required: [mode, workflow_status, trace_id, source]
+  properties:
+    mode: {type: string}
+    pre_call: {type: object}
+    transcript_analysis: {type: object}
+    post_call: {type: object}
+    updates: {type: object}
+    history: {type: object}
+    control_evidence: {type: object}
+    workflow_status: {type: string}
+    trace_id: {type: string}
+    source: {type: string}
+state_schema:
+  type: object
+  properties:
+    workflow_stage: {type: string}
+    review_required: {type: boolean}
+    current_mode: {type: string}
+memory_schema:
+  type: object
+  properties:
+    account_history: {type: array}
+    prior_recommendations: {type: array}
+    ptp_history: {type: array}
+skills:
+  - collections_pre_call_intelligence
+  - voice_or_transcript_intelligence
+  - conversation_intelligence
+  - ptp_extraction
+  - claim_detection
+  - objection_detection
+  - sentiment_stress_analysis
+  - trust_governance
+  - persona_update
+  - next_best_action
+  - post_call_review
+  - voice_pipeline_backend
+tools:
+  - collections_context_loader
+  - transcript_analyzer
+  - ptp_validator
+  - claim_manager
+  - trust_audit_logger
+  - review_case_manager
+prompts:
+  - nba_reasoning:v1
+  - persona_explanation:v1
+  - trust_gate_explanation:v1
+  - banking_guardrails:v1
+  - pii_redaction:v1
+  - conversation_intelligence:v1
+model_preferences:
+  mode: llm_extraction_with_deterministic_rules
+  llm_provider: groq
+  llm_model: llama-3.1-8b-instant
+  scoring_method: evidence_based_deterministic
+  post_call_extraction: llm_with_keyword_fallback
+  voice_stt: groq_whisper_large_v3_turbo
+  voice_tts: groq_orpheus_v1_english
+policy_permissions:
+  allowed_tools:
+    - collections_context_loader
+    - transcript_analyzer
+    - ptp_validator
+    - claim_manager
+    - trust_audit_logger
+    - review_case_manager
+    - invoke
+  allowed_actions: [invoke, analyze, persist, review]
+  allowed_data_scopes: [collections_accounts, call_history, review_cases]
+  requires_human_approval_for: [settlement, waiver, trigger_legal, persona_shift_distressed]
+  max_auto_waiver_pct: 0
+guardrails:
+  - customer_data_access
+  - pii_leakage
+  - payment_authorization
+  - collections_conduct
+  - prompt_injection
+  - business_scope
+observability_hooks:
+  execution_trace: true
+  agent_run: true
+  step_trace: true
+  policy_decision: true
+  usage_cost: true
+  audit: true
+metadata:
+  timeout_seconds: 60
+  voice_pipeline_status: backend_migrated_frontend_pending
+  safe_demo_claims:
+    - Collections is onboarded as a wrapped workflow plugin governed by the Agent Harness
+    - Pre-call scoring is deterministic and explainable (five-score evidence engine)
+    - Post-call transcript analysis uses LLM extraction when configured, otherwise labelled keyword fallback
+    - The harness controls lifecycle, guardrails, audit, and invocation boundary
+    - Captured transcript replay is used unless live voice has been fully wired and tested
+  avoid_claiming:
+    - Live voice if browser microphone not wired
+    - Guaranteed extraction accuracy
+    - Autonomous payment or waiver decisions
+    - Production-grade telephony
+status: active

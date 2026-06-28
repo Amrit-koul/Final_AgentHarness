@@ -1,0 +1,14 @@
+{
+  "id": "ptp_forgetful",
+  "title": "Forgetful Payer — Immediate PTP Commitment",
+  "description": "Customer forgot the EMI due date, cooperatively commits to paying within 2 days.",
+  "persona_context": "forgetful_payer",
+  "metadata": {
+    "scenario": "ptp",
+    "expected_intent": "Promise to Pay",
+    "expected_life_event": null,
+    "expected_ptp_signal": true,
+    "expected_review_required": false
+  },
+  "transcript": "ARIA: Hello, may I speak with Priya Nair? Hi Priya, this is ARIA from the bank. I'm calling about your home loan EMI of ₹22,000 which was due on the 10th and appears to have been missed. Is everything alright?\n\nCustomer: Oh no, really? I completely forgot! I've been travelling for work — I was supposed to set up an auto-debit but it never went through. I'm so sorry.\n\nARIA: No worries at all, Priya. These things happen. Would you be able to make the payment soon to avoid any late charges?\n\nCustomer: Yes, absolutely. I'll do it right now actually — let me pull up my banking app. Actually, can I do it tomorrow morning? I'll transfer ₹22,000 by 10 AM tomorrow. Is that okay?\n\nARIA: That's perfectly fine. I'll note your commitment to pay ₹22,000 by tomorrow 10 AM. We'll pause any follow-up messages until then. If you face any difficulty, please don't hesitate to reach out.\n\nCustomer: Great, thank you. I'll make sure it's done first thing tomorrow.\n\nARIA: Thank you, Priya. Have a good evening!"
+}

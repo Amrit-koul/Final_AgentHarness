@@ -1,0 +1,21 @@
+agent_id: policy_assistant_agent
+name: Policy Assistant Agent
+owner: Retail Banking Policy
+business_function: Policy Assistance
+agent_type: internal
+execution_mode: workflow
+adapter_type: python_function
+entrypoint: banking_agents.agents.control_plane_plugins.internal.policy_assistant
+description: Existing Policy RAG agent exposed through the control plane.
+input_schema: {type: object, required: [query], properties: {query: {type: string}, session_id: {type: string}}}
+output_schema: {type: object, required: [answer], properties: {answer: {type: string}}}
+state_schema: {type: object, properties: {session_id: {type: string}}}
+memory_schema: {type: object, properties: {conversation: {type: array}}}
+skills: [policy_retrieval, grounded_answering]
+tools: [document_search]
+prompts: [system:v1, retrieval_answer:v1, banking_guardrails:v1, pii_redaction:v1]
+model_preferences: {primary: llama-3.1-8b-instant, fallback: llama-3.3-70b-versatile}
+policy_permissions: {allowed_tools: [document_search, invoke], allowed_actions: [invoke], allowed_data_scopes: [policy_documents], requires_human_approval_for: []}
+guardrails: [prompt_injection, pii_leakage, regulatory_advice, business_scope]
+observability_hooks: {execution_trace: true, agent_run: true, policy_decision: true}
+status: active

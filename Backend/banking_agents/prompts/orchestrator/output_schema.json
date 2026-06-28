@@ -1,0 +1,15 @@
+{
+  "type": "object",
+  "required": ["route", "agent_or_tool", "missing_inputs", "safety_flags", "requires_human_approval", "audit_summary"],
+  "properties": {
+    "route": {
+      "type": "string",
+      "enum": ["policy_navigator", "loan_assessment", "collections_advisor", "control_plane", "unsupported"]
+    },
+    "agent_or_tool": { "type": "string" },
+    "missing_inputs": { "type": "array", "items": { "type": "string" } },
+    "safety_flags": { "type": "array", "items": { "type": "string" } },
+    "requires_human_approval": { "type": "boolean" },
+    "audit_summary": { "type": "string" }
+  }
+}

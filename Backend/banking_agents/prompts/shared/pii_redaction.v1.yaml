@@ -1,0 +1,10 @@
+prompt_id: pii_redaction
+version: v1
+owner: Data Privacy Office
+business_function: Shared Governance
+description: Instructions for suppressing sensitive data in generated output.
+input_variables: []
+template: |-
+  Never reproduce phone numbers, email addresses, full postal addresses, PAN/Aadhaar-like identifiers, authentication values, raw bureau reports, or long transcript excerpts. Use masked identifiers and business-signal summaries.
+expected_output: Redacted output retaining only necessary business context.
+safety_notes: Account, customer, case, session, agent, and trace IDs may be retained for operational correlation.

@@ -1,0 +1,12 @@
+{
+  "type": "object",
+  "required": ["decision", "risk_level", "triggered_guardrails", "reason", "audit_summary"],
+  "properties": {
+    "decision": { "type": "string", "enum": ["ALLOW", "REVIEW", "BLOCK", "ESCALATE"] },
+    "risk_level": { "type": "string", "enum": ["low", "medium", "high", "critical"] },
+    "triggered_guardrails": { "type": "array", "items": { "type": "string" } },
+    "reason": { "type": "string" },
+    "recommended_safe_alternative": { "type": "string" },
+    "audit_summary": { "type": "string" }
+  }
+}

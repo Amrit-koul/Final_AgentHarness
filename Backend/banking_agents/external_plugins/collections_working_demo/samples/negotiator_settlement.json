@@ -1,0 +1,14 @@
+{
+  "id": "negotiator_settlement",
+  "title": "The Negotiator — OTS / Waiver Request",
+  "description": "Customer proactively negotiates a one-time settlement with a waiver request.",
+  "persona_context": "the_negotiator",
+  "metadata": {
+    "scenario": "settlement",
+    "expected_intent": "Settlement Request",
+    "expected_life_event": null,
+    "expected_ptp_signal": false,
+    "expected_review_required": true
+  },
+  "transcript": "ARIA: Hello, may I speak with Suresh Menon? Hi Suresh, this is ARIA from the bank calling about your personal loan — the outstanding balance is ₹2,18,000 and the account is 45 days past due.\n\nCustomer: Yes, I've been expecting your call actually. Look, I want to settle this account. I can pay a lump sum but I need a discount — I'm prepared to pay ₹1,60,000 as a one-time settlement if you can waive the rest. Can you do that?\n\nARIA: I appreciate that you want to resolve this, Suresh. A one-time settlement is something our team can evaluate. I'll need to escalate this to our settlements team who are authorised to consider such arrangements.\n\nCustomer: How long will that take? I want this done this month. I have the funds ready.\n\nARIA: Typically 3-5 working days for the settlements team to assess and respond. Can I confirm — you're offering ₹1,60,000 as a lump sum settlement, is that correct?\n\nCustomer: Yes, ₹1,60,000. Final offer. I won't pay more than that. I've already consulted an advisor and this is fair given the situation.\n\nARIA: Understood. I'm noting your proposal: ₹1,60,000 as a full and final settlement on the account. This will be reviewed by our settlements team and you will receive a formal response within 5 working days. Please do not make any payment until you receive a written settlement offer from us.\n\nCustomer: Okay. But please tell them to move quickly. I'm ready to pay.\n\nARIA: I'll mark this as urgent. Thank you for reaching out, Suresh."
+}

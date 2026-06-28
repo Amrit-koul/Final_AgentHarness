@@ -1,0 +1,91 @@
+policies:
+  customer_data_access:
+    description: "Rules for accessing customer data and PII"
+    REVIEW:
+      - read_bureau_summary
+      - read_sensitive_history
+      - full_raw_pii_access
+      - broad_portfolio_search
+    BLOCK:
+      - bulk_export
+      - unauthorized_profile_access
+
+  payment_and_waiver:
+    description: "Rules for payments, waivers, and financial adjustments"
+    REVIEW:
+      - create_payment_link
+      - offer_settlement
+      - approve_waiver
+      - reverse_charge
+      - legal_escalation
+      - modify_due_date
+    BLOCK:
+      # Handled dynamically for autonomous requests without human approval
+      - autonomous_waiver_approval
+      - autonomous_settlement_approval
+      - autonomous_charge_reversal
+      - non_collections_legal_escalation
+
+  collections_conduct:
+    description: "Rules for collections outreach and conduct"
+    REVIEW:
+      - vulnerable_customer_claim
+      - hardship_claim
+      - repeated_contact_attempts
+      - recommend_field_visit
+      - legal_escalation
+    BLOCK:
+      - threatening_language
+      - harassment
+      - shame_or_coercion
+      - police_threat
+      - abusive_language
+
+  policy_and_regulatory_advice:
+    description: "Rules for providing policy and regulatory advice"
+    REVIEW:
+      - recommend_product
+      - give_unclear_advice
+      - low_rag_quality
+    BLOCK:
+      - guaranteed_legal_advice
+      - guaranteed_financial_outcome
+      - bypass_compliance_instruction
+
+  external_vendor_calls:
+    description: "Rules for interacting with external vendors"
+    REVIEW:
+      - external_api_call_with_sensitive_data
+      - vendor_agent_invoke_with_sensitive_data
+      - new_or_unknown_integration
+      - possible_pii_payload
+    BLOCK:
+      - unapproved_endpoint
+      - raw_pii_to_unapproved_vendor
+      - unknown_vendor_tool
+
+  sql_database:
+    description: "Rules for database interactions"
+    REVIEW:
+      - write_sql
+    BLOCK:
+      - drop
+      - delete
+      - truncate
+      - alter
+      - update_without_approval
+      - union_select_injection
+      - multi_statement_mutation
+
+  prompt_model_ops:
+    description: "Rules for prompt and model configuration changes"
+    REVIEW:
+      - change_prompt_version
+      - promote_challenger_prompt
+      - rollback_prompt
+      - change_model
+      - increase_temperature
+    BLOCK:
+      - prompt_change_by_non_admin
+      - prompt_injection
+      - system_override

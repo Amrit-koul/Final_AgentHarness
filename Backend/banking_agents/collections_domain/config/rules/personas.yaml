@@ -1,0 +1,95 @@
+personas:
+  unknown_insufficient_data:
+    positive: {}
+    negative: {}
+    required: []
+    contradicting: []
+  temporarily_distressed:
+    positive:
+      medium_atp: 25
+      high_itp: 30
+      medium_trust: 20
+      high_trust: 10
+      low_self_cure: 15
+    negative:
+      low_trust: -20
+      low_itp: -25
+    required:
+    - high_itp
+    contradicting:
+    - low_trust
+    - low_itp
+  genuinely_distressed:
+    positive:
+      low_atp: 35
+      medium_itp: 20
+      high_itp: 15
+      medium_trust: 15
+      high_trust: 20
+      low_self_cure: 25
+    negative:
+      high_atp: -35
+      low_itp: -15
+    required:
+    - low_atp
+    contradicting:
+    - high_atp
+  forgetful_payer:
+    positive:
+      high_atp: 30
+      high_trust: 25
+      high_contactability: 20
+      high_self_cure: 20
+    negative:
+      low_atp: -30
+      low_trust: -20
+    required:
+    - high_atp
+    - high_trust
+    contradicting:
+    - low_atp
+    - low_trust
+  the_negotiator:
+    positive:
+      high_atp: 25
+      high_itp: 25
+      high_contactability: 30
+      medium_trust: 10
+    negative:
+      low_itp: -30
+    required:
+    - high_atp
+    - high_itp
+    - high_contactability
+    contradicting:
+    - low_itp
+  hostile_defaulter:
+    positive:
+      high_atp: 30
+      low_itp: 35
+      low_trust: 30
+      low_self_cure: 15
+    negative:
+      high_trust: -30
+      high_itp: -30
+    required:
+    - high_atp
+    - low_itp
+    contradicting:
+    - high_trust
+    - high_itp
+  reluctant_avoider:
+    positive:
+      medium_atp: 25
+      low_contactability: 35
+      medium_trust: 15
+      low_itp: 15
+    negative:
+      high_contactability: -30
+      low_trust: -20
+    required:
+    - low_contactability
+    contradicting:
+    - high_contactability
+
+

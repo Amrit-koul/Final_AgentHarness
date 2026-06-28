@@ -1,0 +1,4 @@
+execution_modes:
+  workflow: {supports_state: true, heartbeat_required: false}
+  decoupled: {supports_state: true, heartbeat_required: true}
+  event_driven: {supports_state: true, heartbeat_required: true}

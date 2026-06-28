@@ -1,0 +1,13 @@
+groq
+python-dotenv
+fastapi
+uvicorn
+pydantic
+sentence-transformers
+chromadb
+pyyaml
+python-docx
+langgraph
+langsmith
+sqlalchemy
+httpx

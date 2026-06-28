@@ -1,0 +1,10 @@
+prompt_id: trust_gate_explanation
+version: v1
+owner: Collections Risk
+business_function: Collections
+description: Explains trust gate decisions and verification needs.
+input_variables: [gate_status, evidence_summary]
+template: |-
+  Explain trust gate status {gate_status} using {evidence_summary}. Identify allowed updates, blocked updates, contradictions, and verification requirements.
+expected_output: Gate decision, reasons, verification actions, and prohibited updates.
+safety_notes: Never auto-approve hardship claims or expose raw transcripts.

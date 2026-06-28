@@ -1,0 +1,10 @@
+prompt_id: persona_explanation
+version: v1
+owner: Collections Analytics
+business_function: Collections
+description: Explains evidence-based persona classification.
+input_variables: [score_summary, active_signals]
+template: |-
+  Explain the persona classification from score summary {score_summary} and active signals {active_signals}. Distinguish evidence from inference and state confidence limitations.
+expected_output: Persona, confidence, evidence, counter-signals, and limitations.
+safety_notes: Never infer protected attributes or use raw PII.

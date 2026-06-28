@@ -1,0 +1,50 @@
+hooks:
+  invoke_lifecycle:
+    name: Invoke lifecycle audit
+    trigger_point: pre_invoke
+    description: Records the start of a control-plane invocation.
+    payload_schema: {type: object, required: [trace_id, agent_id]}
+    subscribers: [observability_audit]
+    enabled: true
+    owner: Agent Platform
+    risk_tier: low
+    audit_required: true
+  invoke_completed:
+    name: Invocation completion audit
+    trigger_point: post_invoke
+    description: Records a completed invocation without response PII.
+    payload_schema: {type: object, required: [trace_id, agent_id]}
+    subscribers: [observability_audit]
+    enabled: true
+    owner: Agent Platform
+    risk_tier: low
+    audit_required: true
+  pre_guardrail: {name: Pre-guardrail audit, trigger_point: pre_guardrail, description: Contract point before a guardrail check., payload_schema: {type: object}, subscribers: [observability_audit], enabled: true, owner: Risk Engineering, risk_tier: medium, audit_required: true}
+  post_guardrail: {name: Post-guardrail audit, trigger_point: post_guardrail, description: Contract point after a guardrail check., payload_schema: {type: object}, subscribers: [observability_audit], enabled: true, owner: Risk Engineering, risk_tier: medium, audit_required: true}
+  pre_tool: {name: Pre-tool audit, trigger_point: pre_tool, description: Contract point before a registered tool call., payload_schema: {type: object}, subscribers: [observability_audit], enabled: false, owner: Agent Platform, risk_tier: medium, audit_required: false}
+  post_tool: {name: Post-tool audit, trigger_point: post_tool, description: Contract point after a registered tool call., payload_schema: {type: object}, subscribers: [observability_audit], enabled: false, owner: Agent Platform, risk_tier: medium, audit_required: false}
+  on_error: {name: Error audit, trigger_point: on_error, description: Contract point when an invocation fails., payload_schema: {type: object}, subscribers: [observability_audit], enabled: true, owner: Agent Platform, risk_tier: medium, audit_required: true}
+  policy_blocked:
+    name: Policy block audit
+    trigger_point: on_policy_block
+    description: Records policy blocks for review.
+    payload_schema: {type: object, required: [trace_id, agent_id]}
+    subscribers: [observability_audit]
+    enabled: true
+    owner: Risk Engineering
+    risk_tier: high
+    audit_required: true
+  on_kill_switch: {name: Kill switch audit, trigger_point: on_kill_switch, description: Contract point for kill-switch changes., payload_schema: {type: object}, subscribers: [observability_audit], enabled: true, owner: Risk Engineering, risk_tier: critical, audit_required: true}
+  on_degradation: {name: Degradation audit, trigger_point: on_degradation, description: Contract point for degradation events., payload_schema: {type: object}, subscribers: [observability_audit], enabled: true, owner: Agent Platform, risk_tier: high, audit_required: true}
+  cost_recorded:
+    name: Usage cost audit
+    trigger_point: on_cost_record
+    description: Records metering lifecycle events.
+    payload_schema: {type: object, required: [trace_id, agent_id]}
+    subscribers: [observability_audit]
+    enabled: true
+    owner: Agent Platform
+    risk_tier: medium
+    audit_required: true
+  on_trace_emit: {name: Trace emission audit, trigger_point: on_trace_emit, description: Contract point for trace emission., payload_schema: {type: object}, subscribers: [observability_audit], enabled: true, owner: Agent Platform, risk_tier: low, audit_required: false}
+  on_evaluation_record: {name: Evaluation audit, trigger_point: on_evaluation_record, description: Contract point for persisted evaluator output., payload_schema: {type: object}, subscribers: [observability_audit], enabled: true, owner: AI Quality, risk_tier: medium, audit_required: true}

@@ -1,0 +1,1574 @@
+[
+  {
+    "id": "ACC-DEMO-01",
+    "name": "Rajesh Kumar",
+    "age": 34,
+    "job": "Sr. Software Engineer",
+    "city": "Bengaluru",
+    "persona": "forgetful_payer",
+    "bucket": "X1",
+    "dpd": 6,
+    "product": "Personal Loan",
+    "emi": 18500,
+    "outstanding": 850000,
+    "cibil": 782,
+    "priority": "low",
+    "priority_score": 22,
+    "priority_reason": "Early stage \u00b7 Digital outreach sufficient",
+    "primary_channel": "whatsapp",
+    "fallback_channel": "sms",
+    "status": "PTP Secured",
+    "next_action": "suppress_all",
+    "scores": {
+      "ability_to_pay": 88,
+      "intent_to_pay": 92,
+      "self_cure_probability": 84,
+      "trust_score": 82,
+      "contactability": 12
+    },
+    "call_history": [
+      "WA D-5: Reminder sent \u00b7 Read \u2713",
+      "ECS bounce D0",
+      "WA D1: Read \u2713 \u2014 no click",
+      "ARIA signal: voice trigger at DPD 6"
+    ],
+    "compliance_passed": true,
+    "agent_outputs": null,
+    "is_demo": true,
+    "demo_order": 1,
+    "demo_role": "wa_event",
+    "ptp_history": [
+      {
+        "status": "HONORED",
+        "days_ago": 45,
+        "amount": 18500
+      },
+      {
+        "status": "HONORED",
+        "days_ago": 15,
+        "amount": 18500
+      }
+    ],
+    "claims": []
+  },
+  {
+    "id": "ACC-10005",
+    "name": "Rajesh Gupta",
+    "age": 38,
+    "job": "Software Engineer",
+    "city": "Kolkata",
+    "persona": "forgetful_payer",
+    "bucket": "pre_due",
+    "dpd": 0,
+    "product": "Business Loan",
+    "emi": 29600,
+    "outstanding": 1470000,
+    "cibil": 763,
+    "scores": {
+      "ability_to_pay": 86.5,
+      "intent_to_pay": 88.2,
+      "self_cure_probability": 87.3,
+      "trust_score": 67.2,
+      "contactability": 11.3
+    },
+    "priority": "low",
+    "priority_score": 5,
+    "primary_channel": "whatsapp",
+    "fallback_channel": "sms",
+    "status": "PTP Secured",
+    "next_action": "Suppress until PTP date",
+    "due_date": "23 May 2026",
+    "last_contact": "18 May 2026",
+    "call_history": [
+      "WA reminder D-5: Read \u2713",
+      "ECS bounce D0 detected",
+      "WA D1: Read, no payment click",
+      "Voice call D6: PTP secured"
+    ],
+    "compliance_passed": true,
+    "agent_outputs": null,
+    "priority_reason": "Early stage \u00b7 Digital outreach sufficient",
+    "is_demo": false,
+    "demo_role": null,
+    "ptp_history": [
+      {
+        "status": "HONORED",
+        "days_ago": 45,
+        "amount": 29600
+      },
+      {
+        "status": "HONORED",
+        "days_ago": 15,
+        "amount": 29600
+      }
+    ],
+    "claims": []
+  },
+  {
+    "id": "ACC-10011",
+    "name": "Vinod Nair",
+    "age": 45,
+    "job": "Teacher",
+    "city": "Surat",
+    "persona": "forgetful_payer",
+    "bucket": "X3",
+    "dpd": 80,
+    "product": "Auto Loan",
+    "emi": 23300,
+    "outstanding": 677000,
+    "cibil": 691,
+    "scores": {
+      "ability_to_pay": 91.4,
+      "intent_to_pay": 91.5,
+      "self_cure_probability": 65.3,
+      "trust_score": 83.0,
+      "contactability": 15.2
+    },
+    "priority": "medium",
+    "priority_score": 63.9,
+    "primary_channel": "whatsapp",
+    "fallback_channel": "sms",
+    "status": "PTP Secured",
+    "next_action": "Suppress until PTP date",
+    "due_date": "04 Mar 2026",
+    "last_contact": "19 May 2026",
+    "call_history": [
+      "WA reminder D-5: Read \u2713",
+      "ECS bounce D0 detected"
+    ],
+    "compliance_passed": true,
+    "agent_outputs": null,
+    "priority_reason": "Action required \u00b7 Monitor closely",
+    "is_demo": false,
+    "demo_role": null,
+    "ptp_history": [
+      {
+        "status": "HONORED",
+        "days_ago": 45,
+        "amount": 23300
+      },
+      {
+        "status": "HONORED",
+        "days_ago": 15,
+        "amount": 23300
+      }
+    ],
+    "claims": []
+  },
+  {
+    "id": "ACC-10012",
+    "name": "Neha Kapoor",
+    "age": 34,
+    "job": "Software Engineer",
+    "city": "Lucknow",
+    "persona": "forgetful_payer",
+    "bucket": "X2",
+    "dpd": 55,
+    "product": "Education Loan",
+    "emi": 7900,
+    "outstanding": 612000,
+    "cibil": 705,
+    "scores": {
+      "ability_to_pay": 90.2,
+      "intent_to_pay": 91.7,
+      "self_cure_probability": 72.5,
+      "trust_score": 81.0,
+      "contactability": 14.1
+    },
+    "priority": "medium",
+    "priority_score": 43.9,
+    "primary_channel": "whatsapp",
+    "fallback_channel": "sms",
+    "status": "PTP Secured",
+    "next_action": "Suppress until PTP date",
+    "due_date": "29 Mar 2026",
+    "last_contact": "22 May 2026",
+    "call_history": [
+      "WA reminder D-5: Read \u2713",
+      "ECS bounce D0 detected"
+    ],
+    "compliance_passed": true,
+    "agent_outputs": null,
+    "priority_reason": "Action required \u00b7 Monitor closely",
+    "is_demo": false,
+    "demo_role": null,
+    "ptp_history": [
+      {
+        "status": "HONORED",
+        "days_ago": 45,
+        "amount": 7900
+      },
+      {
+        "status": "HONORED",
+        "days_ago": 15,
+        "amount": 7900
+      }
+    ],
+    "claims": []
+  },
+  {
+    "id": "ACC-10019",
+    "name": "Rajesh Pandey",
+    "age": 28,
+    "job": "Govt Employee",
+    "city": "Indore",
+    "persona": "forgetful_payer",
+    "bucket": "X2",
+    "dpd": 32,
+    "product": "Personal Loan",
+    "emi": 27100,
+    "outstanding": 1099000,
+    "cibil": 610,
+    "scores": {
+      "ability_to_pay": 81.6,
+      "intent_to_pay": 91.3,
+      "self_cure_probability": 68.9,
+      "trust_score": 89.0,
+      "contactability": 6.2
+    },
+    "priority": "medium",
+    "priority_score": 38.9,
+    "primary_channel": "whatsapp",
+    "fallback_channel": "sms",
+    "status": "PTP Secured",
+    "next_action": "Suppress until PTP date",
+    "due_date": "21 Apr 2026",
+    "last_contact": "21 May 2026",
+    "call_history": [
+      "WA reminder D-5: Read \u2713",
+      "ECS bounce D0 detected",
+      "WA D1: Read, no payment click",
+      "Voice call D6: PTP secured"
+    ],
+    "compliance_passed": true,
+    "agent_outputs": null,
+    "priority_reason": "Action required \u00b7 Monitor closely",
+    "is_demo": false,
+    "demo_role": null,
+    "ptp_history": [
+      {
+        "status": "HONORED",
+        "days_ago": 45,
+        "amount": 27100
+      },
+      {
+        "status": "HONORED",
+        "days_ago": 15,
+        "amount": 27100
+      }
+    ],
+    "claims": []
+  },
+  {
+    "id": "ACC-10020",
+    "name": "Rahul Verma",
+    "age": 43,
+    "job": "Contractor",
+    "city": "Lucknow",
+    "persona": "forgetful_payer",
+    "bucket": "legal",
+    "dpd": 117,
+    "product": "Personal Loan",
+    "emi": 29500,
+    "outstanding": 1324000,
+    "cibil": 817,
+    "scores": {
+      "ability_to_pay": 82.9,
+      "intent_to_pay": 81.7,
+      "self_cure_probability": 71.5,
+      "trust_score": 81.7,
+      "contactability": 9.7
+    },
+    "priority": "high",
+    "priority_score": 81.3,
+    "primary_channel": "whatsapp",
+    "fallback_channel": "sms",
+    "status": "PTP Secured",
+    "next_action": "Suppress until PTP date",
+    "due_date": "26 Jan 2026",
+    "last_contact": "22 May 2026",
+    "call_history": [
+      "WA reminder D-5: Read \u2713",
+      "ECS bounce D0 detected"
+    ],
+    "compliance_passed": true,
+    "agent_outputs": null,
+    "priority_reason": "Escalation risk \u00b7 Immediate action needed",
+    "is_demo": false,
+    "demo_role": null,
+    "ptp_history": [
+      {
+        "status": "HONORED",
+        "days_ago": 45,
+        "amount": 29500
+      },
+      {
+        "status": "HONORED",
+        "days_ago": 15,
+        "amount": 29500
+      }
+    ],
+    "claims": []
+  },
+  {
+    "id": "ACC-10022",
+    "name": "Sanjay Kulkarni",
+    "age": 40,
+    "job": "Manager",
+    "city": "Bengaluru",
+    "persona": "forgetful_payer",
+    "bucket": "X1",
+    "dpd": 4,
+    "product": "Business Loan",
+    "emi": 22000,
+    "outstanding": 4940000,
+    "cibil": 742,
+    "scores": {
+      "ability_to_pay": 74.3,
+      "intent_to_pay": 81.1,
+      "self_cure_probability": 70.3,
+      "trust_score": 73.6,
+      "contactability": 15.3
+    },
+    "priority": "low",
+    "priority_score": 15.6,
+    "primary_channel": "whatsapp",
+    "fallback_channel": "sms",
+    "status": "PTP Secured",
+    "next_action": "Suppress until PTP date",
+    "due_date": "19 May 2026",
+    "last_contact": "20 May 2026",
+    "call_history": [
+      "WA reminder D-5: Read \u2713",
+      "ECS bounce D0 detected",
+      "WA D1: Read, no payment click"
+    ],
+    "compliance_passed": true,
+    "agent_outputs": null,
+    "priority_reason": "Early stage \u00b7 Digital outreach sufficient",
+    "is_demo": false,
+    "demo_role": null,
+    "ptp_history": [
+      {
+        "status": "HONORED",
+        "days_ago": 45,
+        "amount": 22000
+      },
+      {
+        "status": "HONORED",
+        "days_ago": 15,
+        "amount": 22000
+      }
+    ],
+    "claims": []
+  },
+  {
+    "id": "ACC-DEMO-02",
+    "name": "Amit Sharma",
+    "age": 41,
+    "job": "Mid-level Manager",
+    "city": "Pune",
+    "persona": "temporarily_distressed",
+    "bucket": "X1",
+    "dpd": 6,
+    "product": "Personal Loan",
+    "emi": 22000,
+    "outstanding": 1200000,
+    "cibil": 710,
+    "priority": "medium",
+    "priority_score": 45,
+    "priority_reason": "Action required \u00b7 Monitor closely",
+    "primary_channel": "tele_inhouse",
+    "fallback_channel": "whatsapp",
+    "status": "Under Review",
+    "next_action": "trigger_ots",
+    "scores": {
+      "ability_to_pay": 76,
+      "intent_to_pay": 78,
+      "self_cure_probability": 65,
+      "trust_score": 80,
+      "contactability": 38
+    },
+    "call_history": [
+      "WA pre-due D-5: Read \u2713",
+      "ECS bounce D0",
+      "WA D1: Read \u2713 \u2014 no click",
+      "WA D3: Read \u2713 \u2014 silence detected",
+      "Voice trigger D6"
+    ],
+    "compliance_passed": true,
+    "agent_outputs": null,
+    "is_demo": true,
+    "demo_order": 3,
+    "demo_role": "call_empathy",
+    "ptp_history": [
+      {
+        "status": "HONORED",
+        "days_ago": 90,
+        "amount": 22000
+      },
+      {
+        "status": "BROKEN",
+        "days_ago": 20,
+        "amount": 22000
+      }
+    ],
+    "claims": [
+      {
+        "type": "medical",
+        "details": "Hospitalization",
+        "state": "VERIFIED"
+      }
+    ]
+  },
+  {
+    "id": "ACC-10009",
+    "name": "Arjun Agarwal",
+    "age": 55,
+    "job": "Entrepreneur",
+    "city": "Vadodara",
+    "persona": "temporarily_distressed",
+    "bucket": "X2",
+    "dpd": 38,
+    "product": "Personal Loan",
+    "emi": 34900,
+    "outstanding": 167000,
+    "cibil": 616,
+    "scores": {
+      "ability_to_pay": 47.5,
+      "intent_to_pay": 62.2,
+      "self_cure_probability": 37.7,
+      "trust_score": 77.4,
+      "contactability": 44.9
+    },
+    "priority": "medium",
+    "priority_score": 60.5,
+    "primary_channel": "tele_inhouse",
+    "fallback_channel": "whatsapp",
+    "status": "Under Review",
+    "next_action": "Trigger OTS discussion",
+    "due_date": "15 Apr 2026",
+    "last_contact": "21 May 2026",
+    "call_history": [
+      "WA pre-due: Read \u2713",
+      "ECS bounce D0",
+      "WA D1: Silence \u2014 unusual"
+    ],
+    "compliance_passed": true,
+    "agent_outputs": null,
+    "priority_reason": "Action required \u00b7 Monitor closely",
+    "is_demo": false,
+    "demo_role": null,
+    "ptp_history": [
+      {
+        "status": "HONORED",
+        "days_ago": 90,
+        "amount": 34900
+      },
+      {
+        "status": "BROKEN",
+        "days_ago": 20,
+        "amount": 34900
+      }
+    ],
+    "claims": [
+      {
+        "type": "medical",
+        "details": "Hospitalization",
+        "state": "UNDER_REVIEW"
+      }
+    ]
+  },
+  {
+    "id": "ACC-10010",
+    "name": "Rajesh Kapoor",
+    "age": 27,
+    "job": "Teacher",
+    "city": "Hyderabad",
+    "persona": "temporarily_distressed",
+    "bucket": "legal",
+    "dpd": 107,
+    "product": "Education Loan",
+    "emi": 17200,
+    "outstanding": 692000,
+    "cibil": 740,
+    "scores": {
+      "ability_to_pay": 37.0,
+      "intent_to_pay": 67.3,
+      "self_cure_probability": 45.4,
+      "trust_score": 79.9,
+      "contactability": 29.8
+    },
+    "priority": "high",
+    "priority_score": 93.3,
+    "primary_channel": "tele_inhouse",
+    "fallback_channel": "whatsapp",
+    "status": "Under Review",
+    "next_action": "Trigger OTS discussion",
+    "due_date": "05 Feb 2026",
+    "last_contact": "19 May 2026",
+    "call_history": [
+      "WA pre-due: Read \u2713",
+      "ECS bounce D0"
+    ],
+    "compliance_passed": true,
+    "agent_outputs": null,
+    "priority_reason": "Escalation risk \u00b7 Immediate action needed",
+    "is_demo": false,
+    "demo_role": null,
+    "ptp_history": [
+      {
+        "status": "HONORED",
+        "days_ago": 90,
+        "amount": 17200
+      },
+      {
+        "status": "BROKEN",
+        "days_ago": 20,
+        "amount": 17200
+      }
+    ],
+    "claims": [
+      {
+        "type": "medical",
+        "details": "Hospitalization",
+        "state": "UNDER_REVIEW"
+      }
+    ]
+  },
+  {
+    "id": "ACC-10015",
+    "name": "Deepak Bansal",
+    "age": 55,
+    "job": "Sales Executive",
+    "city": "Hyderabad",
+    "persona": "temporarily_distressed",
+    "bucket": "legal",
+    "dpd": 91,
+    "product": "Home Loan",
+    "emi": 27300,
+    "outstanding": 6437000,
+    "cibil": 765,
+    "scores": {
+      "ability_to_pay": 42.7,
+      "intent_to_pay": 57.4,
+      "self_cure_probability": 59.5,
+      "trust_score": 75.8,
+      "contactability": 27.5
+    },
+    "priority": "high",
+    "priority_score": 91.4,
+    "primary_channel": "tele_inhouse",
+    "fallback_channel": "whatsapp",
+    "status": "Under Review",
+    "next_action": "Trigger OTS discussion",
+    "due_date": "21 Feb 2026",
+    "last_contact": "18 May 2026",
+    "call_history": [
+      "WA pre-due: Read \u2713",
+      "ECS bounce D0",
+      "WA D1: Silence \u2014 unusual",
+      "Voice call D6: Financial hardship disclosed"
+    ],
+    "compliance_passed": true,
+    "agent_outputs": null,
+    "priority_reason": "Escalation risk \u00b7 Immediate action needed",
+    "is_demo": false,
+    "demo_role": null,
+    "ptp_history": [
+      {
+        "status": "HONORED",
+        "days_ago": 90,
+        "amount": 27300
+      },
+      {
+        "status": "BROKEN",
+        "days_ago": 20,
+        "amount": 27300
+      }
+    ],
+    "claims": [
+      {
+        "type": "medical",
+        "details": "Hospitalization",
+        "state": "UNDER_REVIEW"
+      }
+    ]
+  },
+  {
+    "id": "ACC-10017",
+    "name": "Sunita Kumar",
+    "age": 58,
+    "job": "Software Engineer",
+    "city": "Bengaluru",
+    "persona": "temporarily_distressed",
+    "bucket": "X1",
+    "dpd": 18,
+    "product": "Home Loan",
+    "emi": 76800,
+    "outstanding": 1675000,
+    "cibil": 817,
+    "scores": {
+      "ability_to_pay": 36.8,
+      "intent_to_pay": 58.8,
+      "self_cure_probability": 42.5,
+      "trust_score": 77.7,
+      "contactability": 40.5
+    },
+    "priority": "medium",
+    "priority_score": 42.9,
+    "primary_channel": "tele_inhouse",
+    "fallback_channel": "whatsapp",
+    "status": "Under Review",
+    "next_action": "Trigger OTS discussion",
+    "due_date": "05 May 2026",
+    "last_contact": "21 May 2026",
+    "call_history": [
+      "WA pre-due: Read \u2713",
+      "ECS bounce D0"
+    ],
+    "compliance_passed": true,
+    "agent_outputs": null,
+    "priority_reason": "Action required \u00b7 Monitor closely",
+    "is_demo": false,
+    "demo_role": null,
+    "ptp_history": [
+      {
+        "status": "HONORED",
+        "days_ago": 90,
+        "amount": 76800
+      },
+      {
+        "status": "BROKEN",
+        "days_ago": 20,
+        "amount": 76800
+      }
+    ],
+    "claims": [
+      {
+        "type": "medical",
+        "details": "Hospitalization",
+        "state": "UNDER_REVIEW"
+      }
+    ]
+  },
+  {
+    "id": "ACC-10025",
+    "name": "Ravi Goel",
+    "age": 53,
+    "job": "Marketing Manager",
+    "city": "Surat",
+    "persona": "temporarily_distressed",
+    "bucket": "X2",
+    "dpd": 56,
+    "product": "Auto Loan",
+    "emi": 16100,
+    "outstanding": 709000,
+    "cibil": 790,
+    "scores": {
+      "ability_to_pay": 29.5,
+      "intent_to_pay": 70.6,
+      "self_cure_probability": 45.9,
+      "trust_score": 51.2,
+      "contactability": 41.5
+    },
+    "priority": "medium",
+    "priority_score": 61.6,
+    "primary_channel": "tele_inhouse",
+    "fallback_channel": "whatsapp",
+    "status": "Under Review",
+    "next_action": "Trigger OTS discussion",
+    "due_date": "28 Mar 2026",
+    "last_contact": "21 May 2026",
+    "call_history": [
+      "WA pre-due: Read \u2713",
+      "ECS bounce D0"
+    ],
+    "compliance_passed": true,
+    "agent_outputs": null,
+    "priority_reason": "Action required \u00b7 Monitor closely",
+    "is_demo": false,
+    "demo_role": null,
+    "ptp_history": [
+      {
+        "status": "HONORED",
+        "days_ago": 90,
+        "amount": 16100
+      },
+      {
+        "status": "BROKEN",
+        "days_ago": 20,
+        "amount": 16100
+      }
+    ],
+    "claims": [
+      {
+        "type": "medical",
+        "details": "Hospitalization",
+        "state": "UNDER_REVIEW"
+      }
+    ]
+  },
+  {
+    "id": "ACC-10030",
+    "name": "Arjun Jain",
+    "age": 48,
+    "job": "Factory Worker",
+    "city": "Indore",
+    "persona": "temporarily_distressed",
+    "bucket": "X1",
+    "dpd": 1,
+    "product": "Home Loan",
+    "emi": 24000,
+    "outstanding": 2553000,
+    "cibil": 642,
+    "scores": {
+      "ability_to_pay": 52.6,
+      "intent_to_pay": 68.1,
+      "self_cure_probability": 56.0,
+      "trust_score": 63.7,
+      "contactability": 56.0
+    },
+    "priority": "medium",
+    "priority_score": 42.5,
+    "primary_channel": "tele_inhouse",
+    "fallback_channel": "whatsapp",
+    "status": "Under Review",
+    "next_action": "Trigger OTS discussion",
+    "due_date": "22 May 2026",
+    "last_contact": "22 May 2026",
+    "call_history": [
+      "WA pre-due: Read \u2713",
+      "ECS bounce D0"
+    ],
+    "compliance_passed": true,
+    "agent_outputs": null,
+    "priority_reason": "Action required \u00b7 Monitor closely",
+    "is_demo": false,
+    "demo_role": null,
+    "ptp_history": [
+      {
+        "status": "HONORED",
+        "days_ago": 90,
+        "amount": 24000
+      },
+      {
+        "status": "BROKEN",
+        "days_ago": 20,
+        "amount": 24000
+      }
+    ],
+    "claims": [
+      {
+        "type": "medical",
+        "details": "Hospitalization",
+        "state": "UNDER_REVIEW"
+      }
+    ]
+  },
+  {
+    "id": "ACC-DEMO-03",
+    "name": "Ravi Verma",
+    "age": 48,
+    "job": "Trucking Business Owner",
+    "city": "Nagpur",
+    "persona": "hostile_defaulter",
+    "bucket": "X2",
+    "dpd": 38,
+    "product": "Business Loan",
+    "emi": 38000,
+    "outstanding": 2500000,
+    "cibil": 645,
+    "scores": {
+      "ability_to_pay": 72,
+      "intent_to_pay": 32,
+      "self_cure_probability": 18,
+      "trust_score": 28,
+      "contactability": 72
+    },
+    "priority": "high",
+    "priority_score": 80.9,
+    "primary_channel": "field_visit",
+    "fallback_channel": "tele_agency",
+    "status": "Escalated",
+    "next_action": "Escalate to Field Agent",
+    "call_history": [
+      "WA D0: Ignored",
+      "Voice D3: Disconnected",
+      "Voice D7: Hostile \u2014 dispute raised",
+      "Field visit scheduled"
+    ],
+    "compliance_passed": true,
+    "agent_outputs": null,
+    "priority_reason": "Escalation risk \u00b7 Immediate action needed",
+    "is_demo": false,
+    "demo_role": null,
+    "ptp_history": [
+      {
+        "status": "BROKEN",
+        "days_ago": 50,
+        "amount": 38000
+      },
+      {
+        "status": "BROKEN",
+        "days_ago": 10,
+        "amount": 38000
+      }
+    ],
+    "claims": [
+      {
+        "type": "business_loss",
+        "details": "Business down",
+        "state": "CONTRADICTED",
+        "contradiction_reason": "Contradicted by field visit"
+      }
+    ]
+  },
+  {
+    "id": "ACC-10007",
+    "name": "Priya Bansal",
+    "age": 38,
+    "job": "Engineer",
+    "city": "Bengaluru",
+    "persona": "hostile_defaulter",
+    "bucket": "pre_due",
+    "dpd": 0,
+    "product": "Auto Loan",
+    "emi": 20400,
+    "outstanding": 315000,
+    "cibil": 798,
+    "scores": {
+      "ability_to_pay": 69.2,
+      "intent_to_pay": 34.2,
+      "self_cure_probability": 22.1,
+      "trust_score": 40.9,
+      "contactability": 67.3
+    },
+    "priority": "medium",
+    "priority_score": 50.0,
+    "primary_channel": "field_visit",
+    "fallback_channel": "tele_agency",
+    "status": "Escalated",
+    "next_action": "Escalate to Field Agent",
+    "due_date": "23 May 2026",
+    "last_contact": "22 May 2026",
+    "call_history": [
+      "WA D0: Ignored",
+      "Voice D3: Disconnected"
+    ],
+    "compliance_passed": true,
+    "agent_outputs": null,
+    "priority_reason": "Action required \u00b7 Monitor closely",
+    "is_demo": false,
+    "demo_role": null,
+    "ptp_history": [
+      {
+        "status": "BROKEN",
+        "days_ago": 50,
+        "amount": 20400
+      },
+      {
+        "status": "BROKEN",
+        "days_ago": 10,
+        "amount": 20400
+      }
+    ],
+    "claims": [
+      {
+        "type": "business_loss",
+        "details": "Business down",
+        "state": "CONTRADICTED",
+        "contradiction_reason": "Contradicted by field visit"
+      }
+    ]
+  },
+  {
+    "id": "ACC-10013",
+    "name": "Vinod Verma",
+    "age": 32,
+    "job": "Factory Worker",
+    "city": "Chennai",
+    "persona": "hostile_defaulter",
+    "bucket": "X2",
+    "dpd": 32,
+    "product": "Home Loan",
+    "emi": 49500,
+    "outstanding": 7865000,
+    "cibil": 647,
+    "scores": {
+      "ability_to_pay": 69.6,
+      "intent_to_pay": 17.7,
+      "self_cure_probability": 24.2,
+      "trust_score": 39.5,
+      "contactability": 79.3
+    },
+    "priority": "high",
+    "priority_score": 82.9,
+    "primary_channel": "field_visit",
+    "fallback_channel": "tele_agency",
+    "status": "Escalated",
+    "next_action": "Escalate to Field Agent",
+    "due_date": "21 Apr 2026",
+    "last_contact": "18 May 2026",
+    "call_history": [
+      "WA D0: Ignored",
+      "Voice D3: Disconnected",
+      "Voice D7: Hostile \u2014 dispute raised",
+      "Field visit scheduled"
+    ],
+    "compliance_passed": true,
+    "agent_outputs": null,
+    "priority_reason": "Escalation risk \u00b7 Immediate action needed",
+    "is_demo": false,
+    "demo_role": null,
+    "ptp_history": [
+      {
+        "status": "BROKEN",
+        "days_ago": 50,
+        "amount": 49500
+      },
+      {
+        "status": "BROKEN",
+        "days_ago": 10,
+        "amount": 49500
+      }
+    ],
+    "claims": [
+      {
+        "type": "business_loss",
+        "details": "Business down",
+        "state": "CONTRADICTED",
+        "contradiction_reason": "Contradicted by field visit"
+      }
+    ]
+  },
+  {
+    "id": "ACC-10024",
+    "name": "Usha Goel",
+    "age": 39,
+    "job": "Accountant",
+    "city": "Chennai",
+    "persona": "hostile_defaulter",
+    "bucket": "pre_due",
+    "dpd": 0,
+    "product": "Business Loan",
+    "emi": 59600,
+    "outstanding": 2393000,
+    "cibil": 805,
+    "scores": {
+      "ability_to_pay": 72.0,
+      "intent_to_pay": 23.8,
+      "self_cure_probability": 21.1,
+      "trust_score": 41.2,
+      "contactability": 79.2
+    },
+    "priority": "medium",
+    "priority_score": 53.5,
+    "primary_channel": "field_visit",
+    "fallback_channel": "tele_agency",
+    "status": "Escalated",
+    "next_action": "Escalate to Field Agent",
+    "due_date": "23 May 2026",
+    "last_contact": "22 May 2026",
+    "call_history": [
+      "WA D0: Ignored",
+      "Voice D3: Disconnected",
+      "Voice D7: Hostile \u2014 dispute raised"
+    ],
+    "compliance_passed": true,
+    "agent_outputs": null,
+    "priority_reason": "Action required \u00b7 Monitor closely",
+    "is_demo": false,
+    "demo_role": null,
+    "ptp_history": [
+      {
+        "status": "BROKEN",
+        "days_ago": 50,
+        "amount": 59600
+      },
+      {
+        "status": "BROKEN",
+        "days_ago": 10,
+        "amount": 59600
+      }
+    ],
+    "claims": [
+      {
+        "type": "business_loss",
+        "details": "Business down",
+        "state": "CONTRADICTED",
+        "contradiction_reason": "Contradicted by field visit"
+      }
+    ]
+  },
+  {
+    "id": "ACC-10028",
+    "name": "Anita Chopra",
+    "age": 35,
+    "job": "Engineer",
+    "city": "Indore",
+    "persona": "hostile_defaulter",
+    "bucket": "pre_due",
+    "dpd": 0,
+    "product": "Business Loan",
+    "emi": 58700,
+    "outstanding": 3725000,
+    "cibil": 720,
+    "scores": {
+      "ability_to_pay": 63.8,
+      "intent_to_pay": 31.3,
+      "self_cure_probability": 21.0,
+      "trust_score": 20.8,
+      "contactability": 69.9
+    },
+    "priority": "medium",
+    "priority_score": 50.9,
+    "primary_channel": "field_visit",
+    "fallback_channel": "tele_agency",
+    "status": "Escalated",
+    "next_action": "Escalate to Field Agent",
+    "due_date": "23 May 2026",
+    "last_contact": "20 May 2026",
+    "call_history": [
+      "WA D0: Ignored",
+      "Voice D3: Disconnected"
+    ],
+    "compliance_passed": true,
+    "agent_outputs": null,
+    "priority_reason": "Action required \u00b7 Monitor closely",
+    "is_demo": false,
+    "demo_role": null,
+    "ptp_history": [
+      {
+        "status": "BROKEN",
+        "days_ago": 50,
+        "amount": 58700
+      },
+      {
+        "status": "BROKEN",
+        "days_ago": 10,
+        "amount": 58700
+      }
+    ],
+    "claims": [
+      {
+        "type": "business_loss",
+        "details": "Business down",
+        "state": "CONTRADICTED",
+        "contradiction_reason": "Contradicted by field visit"
+      }
+    ]
+  },
+  {
+    "id": "ACC-10029",
+    "name": "Anita Patel",
+    "age": 42,
+    "job": "Bank Employee",
+    "city": "Bengaluru",
+    "persona": "hostile_defaulter",
+    "bucket": "X1",
+    "dpd": 26,
+    "product": "Auto Loan",
+    "emi": 27000,
+    "outstanding": 825000,
+    "cibil": 789,
+    "scores": {
+      "ability_to_pay": 67.2,
+      "intent_to_pay": 25.7,
+      "self_cure_probability": 14.8,
+      "trust_score": 29.2,
+      "contactability": 77.0
+    },
+    "priority": "medium",
+    "priority_score": 64.7,
+    "primary_channel": "field_visit",
+    "fallback_channel": "tele_agency",
+    "status": "Escalated",
+    "next_action": "Escalate to Field Agent",
+    "due_date": "27 Apr 2026",
+    "last_contact": "20 May 2026",
+    "call_history": [
+      "WA D0: Ignored",
+      "Voice D3: Disconnected"
+    ],
+    "compliance_passed": true,
+    "agent_outputs": null,
+    "priority_reason": "Action required \u00b7 Monitor closely",
+    "is_demo": false,
+    "demo_role": null,
+    "ptp_history": [
+      {
+        "status": "BROKEN",
+        "days_ago": 50,
+        "amount": 27000
+      },
+      {
+        "status": "BROKEN",
+        "days_ago": 10,
+        "amount": 27000
+      }
+    ],
+    "claims": [
+      {
+        "type": "business_loss",
+        "details": "Business down",
+        "state": "CONTRADICTED",
+        "contradiction_reason": "Contradicted by field visit"
+      }
+    ]
+  },
+  {
+    "id": "ACC-10037",
+    "name": "Rahul Jain",
+    "age": 36,
+    "job": "Business Owner",
+    "city": "Ahmedabad",
+    "persona": "hostile_defaulter",
+    "bucket": "X2",
+    "dpd": 50,
+    "product": "Home Loan",
+    "emi": 33000,
+    "outstanding": 7024000,
+    "cibil": 606,
+    "scores": {
+      "ability_to_pay": 75.7,
+      "intent_to_pay": 37.2,
+      "self_cure_probability": 12.9,
+      "trust_score": 15.8,
+      "contactability": 59.4
+    },
+    "priority": "high",
+    "priority_score": 79.7,
+    "primary_channel": "field_visit",
+    "fallback_channel": "tele_agency",
+    "status": "Escalated",
+    "next_action": "Escalate to Field Agent",
+    "due_date": "03 Apr 2026",
+    "last_contact": "20 May 2026",
+    "call_history": [
+      "WA D0: Ignored",
+      "Voice D3: Disconnected",
+      "Voice D7: Hostile \u2014 dispute raised",
+      "Field visit scheduled"
+    ],
+    "compliance_passed": true,
+    "agent_outputs": null,
+    "priority_reason": "Escalation risk \u00b7 Immediate action needed",
+    "is_demo": false,
+    "demo_role": null,
+    "ptp_history": [
+      {
+        "status": "BROKEN",
+        "days_ago": 50,
+        "amount": 33000
+      },
+      {
+        "status": "BROKEN",
+        "days_ago": 10,
+        "amount": 33000
+      }
+    ],
+    "claims": [
+      {
+        "type": "business_loss",
+        "details": "Business down",
+        "state": "CONTRADICTED",
+        "contradiction_reason": "Contradicted by field visit"
+      }
+    ]
+  },
+  {
+    "id": "ACC-DEMO-04",
+    "name": "Prakash Desai",
+    "age": 38,
+    "job": "Small Shop Owner",
+    "city": "Surat",
+    "persona": "reluctant_avoider",
+    "bucket": "X3",
+    "dpd": 72,
+    "product": "Auto Loan",
+    "emi": 14500,
+    "outstanding": 720000,
+    "cibil": 668,
+    "priority": "critical",
+    "priority_score": 99,
+    "priority_reason": "NPA risk \u00b7 Zero tolerance \u00b7 Escalate now",
+    "primary_channel": "legal_notice",
+    "fallback_channel": "field_visit",
+    "status": "No Response",
+    "next_action": "trigger_legal",
+    "scores": {
+      "ability_to_pay": 74,
+      "intent_to_pay": 18,
+      "self_cure_probability": 10,
+      "trust_score": 22,
+      "contactability": 82
+    },
+    "call_history": [
+      "WA ignored \u00d7 8 attempts",
+      "Voice D10: Not picked up",
+      "Voice D20: Picked up \u2014 hung up",
+      "Voice D35: Hostile response",
+      "Field visit D50: Not home",
+      "Legal notice D60: Dispatched"
+    ],
+    "compliance_passed": true,
+    "agent_outputs": null,
+    "is_demo": true,
+    "demo_order": 5,
+    "demo_role": "escalation",
+    "ptp_history": [],
+    "claims": []
+  },
+  {
+    "id": "ACC-10006",
+    "name": "Sunita Patel",
+    "age": 48,
+    "job": "Teacher",
+    "city": "Nagpur",
+    "persona": "reluctant_avoider",
+    "bucket": "X1",
+    "dpd": 19,
+    "product": "Auto Loan",
+    "emi": 17100,
+    "outstanding": 163000,
+    "cibil": 796,
+    "scores": {
+      "ability_to_pay": 83.5,
+      "intent_to_pay": 9.9,
+      "self_cure_probability": 11.1,
+      "trust_score": 11.9,
+      "contactability": 71.5
+    },
+    "priority": "medium",
+    "priority_score": 70.2,
+    "primary_channel": "legal_notice",
+    "fallback_channel": "field_visit",
+    "status": "No Response",
+    "next_action": "Initiate Legal Notice",
+    "due_date": "04 May 2026",
+    "last_contact": "18 May 2026",
+    "call_history": [
+      "WA pre-due: Read, no action",
+      "Voice D5: No pickup",
+      "Voice D8: Refused to engage"
+    ],
+    "compliance_passed": true,
+    "agent_outputs": null,
+    "priority_reason": "Action required \u00b7 Monitor closely",
+    "is_demo": false,
+    "demo_role": null,
+    "ptp_history": [],
+    "claims": []
+  },
+  {
+    "id": "ACC-10008",
+    "name": "Rohit Joshi",
+    "age": 58,
+    "job": "Govt Employee",
+    "city": "Chennai",
+    "persona": "reluctant_avoider",
+    "bucket": "X2",
+    "dpd": 51,
+    "product": "Auto Loan",
+    "emi": 19900,
+    "outstanding": 491000,
+    "cibil": 698,
+    "scores": {
+      "ability_to_pay": 73.0,
+      "intent_to_pay": 10.8,
+      "self_cure_probability": 9.2,
+      "trust_score": 28.4,
+      "contactability": 84.4
+    },
+    "priority": "high",
+    "priority_score": 89.5,
+    "primary_channel": "legal_notice",
+    "fallback_channel": "field_visit",
+    "status": "No Response",
+    "next_action": "Initiate Legal Notice",
+    "due_date": "02 Apr 2026",
+    "last_contact": "20 May 2026",
+    "call_history": [
+      "WA pre-due: Read, no action",
+      "Voice D5: No pickup",
+      "Voice D8: Refused to engage"
+    ],
+    "compliance_passed": true,
+    "agent_outputs": null,
+    "priority_reason": "Escalation risk \u00b7 Immediate action needed",
+    "is_demo": false,
+    "demo_role": null,
+    "ptp_history": [],
+    "claims": []
+  },
+  {
+    "id": "ACC-10014",
+    "name": "Sunita Mehta",
+    "age": 38,
+    "job": "Business Owner",
+    "city": "Lucknow",
+    "persona": "reluctant_avoider",
+    "bucket": "X1",
+    "dpd": 25,
+    "product": "Education Loan",
+    "emi": 16900,
+    "outstanding": 290000,
+    "cibil": 585,
+    "scores": {
+      "ability_to_pay": 82.2,
+      "intent_to_pay": 14.2,
+      "self_cure_probability": 14.1,
+      "trust_score": 14.3,
+      "contactability": 92.0
+    },
+    "priority": "medium",
+    "priority_score": 74.7,
+    "primary_channel": "legal_notice",
+    "fallback_channel": "field_visit",
+    "status": "No Response",
+    "next_action": "Initiate Legal Notice",
+    "due_date": "28 Apr 2026",
+    "last_contact": "18 May 2026",
+    "call_history": [
+      "WA pre-due: Read, no action",
+      "Voice D5: No pickup",
+      "Voice D8: Refused to engage",
+      "Field escalation triggered"
+    ],
+    "compliance_passed": true,
+    "agent_outputs": null,
+    "priority_reason": "Action required \u00b7 Monitor closely",
+    "is_demo": false,
+    "demo_role": null,
+    "ptp_history": [],
+    "claims": []
+  },
+  {
+    "id": "ACC-10016",
+    "name": "Anita Agarwal",
+    "age": 30,
+    "job": "Manager",
+    "city": "Indore",
+    "persona": "reluctant_avoider",
+    "bucket": "X1",
+    "dpd": 26,
+    "product": "Auto Loan",
+    "emi": 21300,
+    "outstanding": 549000,
+    "cibil": 766,
+    "scores": {
+      "ability_to_pay": 65.5,
+      "intent_to_pay": 18.9,
+      "self_cure_probability": 10.3,
+      "trust_score": 15.3,
+      "contactability": 90.9
+    },
+    "priority": "medium",
+    "priority_score": 74.2,
+    "primary_channel": "legal_notice",
+    "fallback_channel": "field_visit",
+    "status": "No Response",
+    "next_action": "Initiate Legal Notice",
+    "due_date": "27 Apr 2026",
+    "last_contact": "22 May 2026",
+    "call_history": [
+      "WA pre-due: Read, no action",
+      "Voice D5: No pickup",
+      "Voice D8: Refused to engage"
+    ],
+    "compliance_passed": true,
+    "agent_outputs": null,
+    "priority_reason": "Action required \u00b7 Monitor closely",
+    "is_demo": false,
+    "demo_role": null,
+    "ptp_history": [],
+    "claims": []
+  },
+  {
+    "id": "ACC-10018",
+    "name": "Pooja Jain",
+    "age": 55,
+    "job": "Doctor",
+    "city": "Kolkata",
+    "persona": "reluctant_avoider",
+    "bucket": "X3",
+    "dpd": 67,
+    "product": "Auto Loan",
+    "emi": 21100,
+    "outstanding": 272000,
+    "cibil": 655,
+    "scores": {
+      "ability_to_pay": 67.4,
+      "intent_to_pay": 7.0,
+      "self_cure_probability": 10.7,
+      "trust_score": 28.2,
+      "contactability": 88.6
+    },
+    "priority": "critical",
+    "priority_score": 99,
+    "primary_channel": "legal_notice",
+    "fallback_channel": "field_visit",
+    "status": "No Response",
+    "next_action": "Initiate Legal Notice",
+    "due_date": "17 Mar 2026",
+    "last_contact": "22 May 2026",
+    "call_history": [
+      "WA pre-due: Read, no action",
+      "Voice D5: No pickup"
+    ],
+    "compliance_passed": true,
+    "agent_outputs": null,
+    "priority_reason": "NPA risk \u00b7 Zero tolerance \u00b7 Escalate now",
+    "is_demo": false,
+    "demo_role": null,
+    "ptp_history": [],
+    "claims": []
+  },
+  {
+    "id": "ACC-10021",
+    "name": "Aarti Joshi",
+    "age": 52,
+    "job": "Engineer",
+    "city": "Mumbai",
+    "persona": "reluctant_avoider",
+    "bucket": "legal",
+    "dpd": 97,
+    "product": "Education Loan",
+    "emi": 6200,
+    "outstanding": 643000,
+    "cibil": 750,
+    "scores": {
+      "ability_to_pay": 68.8,
+      "intent_to_pay": 11.8,
+      "self_cure_probability": 17.2,
+      "trust_score": 27.0,
+      "contactability": 91.4
+    },
+    "priority": "critical",
+    "priority_score": 99,
+    "primary_channel": "legal_notice",
+    "fallback_channel": "field_visit",
+    "status": "No Response",
+    "next_action": "Initiate Legal Notice",
+    "due_date": "15 Feb 2026",
+    "last_contact": "20 May 2026",
+    "call_history": [
+      "WA pre-due: Read, no action",
+      "Voice D5: No pickup",
+      "Voice D8: Refused to engage",
+      "Field escalation triggered"
+    ],
+    "compliance_passed": true,
+    "agent_outputs": null,
+    "priority_reason": "NPA risk \u00b7 Zero tolerance \u00b7 Escalate now",
+    "is_demo": false,
+    "demo_role": null,
+    "ptp_history": [],
+    "claims": []
+  },
+  {
+    "id": "ACC-10023",
+    "name": "Ritu Kumar",
+    "age": 47,
+    "job": "Doctor",
+    "city": "Bhopal",
+    "persona": "forgetful_payer",
+    "bucket": "pre_due",
+    "dpd": 0,
+    "product": "Business Loan",
+    "emi": 56700,
+    "outstanding": 2497000,
+    "cibil": 612,
+    "scores": {
+      "ability_to_pay": 74.4,
+      "intent_to_pay": 84.0,
+      "self_cure_probability": 82.6,
+      "trust_score": 79.0,
+      "contactability": 6.7
+    },
+    "priority": "low",
+    "priority_score": 5,
+    "primary_channel": "whatsapp",
+    "fallback_channel": "sms",
+    "status": "PTP Secured",
+    "next_action": "Suppress until PTP date",
+    "due_date": "23 May 2026",
+    "last_contact": "20 May 2026",
+    "call_history": [
+      "WA reminder D-5: Read \u2713",
+      "ECS bounce D0 detected"
+    ],
+    "compliance_passed": true,
+    "agent_outputs": null,
+    "priority_reason": "Early stage \u00b7 Digital outreach sufficient",
+    "is_demo": false,
+    "demo_role": null,
+    "ptp_history": [
+      {
+        "status": "HONORED",
+        "days_ago": 45,
+        "amount": 56700
+      },
+      {
+        "status": "HONORED",
+        "days_ago": 15,
+        "amount": 56700
+      }
+    ],
+    "claims": []
+  },
+  {
+    "id": "ACC-10026",
+    "name": "Suresh Sharma",
+    "age": 31,
+    "job": "Consultant",
+    "city": "Chennai",
+    "persona": "forgetful_payer",
+    "bucket": "X1",
+    "dpd": 11,
+    "product": "Auto Loan",
+    "emi": 17100,
+    "outstanding": 295000,
+    "cibil": 728,
+    "scores": {
+      "ability_to_pay": 91.3,
+      "intent_to_pay": 81.0,
+      "self_cure_probability": 81.0,
+      "trust_score": 75.0,
+      "contactability": 19.7
+    },
+    "priority": "low",
+    "priority_score": 17.5,
+    "primary_channel": "whatsapp",
+    "fallback_channel": "sms",
+    "status": "PTP Secured",
+    "next_action": "Suppress until PTP date",
+    "due_date": "12 May 2026",
+    "last_contact": "22 May 2026",
+    "call_history": [
+      "WA reminder D-5: Read \u2713",
+      "ECS bounce D0 detected",
+      "WA D1: Read, no payment click"
+    ],
+    "compliance_passed": true,
+    "agent_outputs": null,
+    "priority_reason": "Early stage \u00b7 Digital outreach sufficient",
+    "is_demo": false,
+    "demo_role": null,
+    "ptp_history": [
+      {
+        "status": "HONORED",
+        "days_ago": 45,
+        "amount": 17100
+      },
+      {
+        "status": "HONORED",
+        "days_ago": 15,
+        "amount": 17100
+      }
+    ],
+    "claims": []
+  }
+]
+

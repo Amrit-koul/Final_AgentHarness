@@ -1,0 +1,7 @@
+policies:
+  default_deny_high_risk_actions: true
+  human_approval_actions: [payment, waiver, settlement, trigger_legal, final_approval]
+  prompt_injection_action: block_request_and_log
+  prompt_injection_quarantines_agent: false
+  unsafe_sql_critical_action: quarantine_affected_agent
+  pii_leakage_critical_action: review_affected_agent

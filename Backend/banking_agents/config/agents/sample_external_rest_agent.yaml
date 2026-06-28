@@ -1,0 +1,37 @@
+agent_id: sample_external_rest_agent
+name: Sample External REST Agent
+owner: Integration Engineering
+business_function: External Integration
+agent_type: external
+execution_mode: decoupled
+adapter_type: rest_api
+endpoint: http://127.0.0.1:9001/invoke
+description: Registration example for an independently hosted HTTP agent.
+input_schema:
+  type: object
+  required: [query]
+  properties:
+    query: {type: string}
+output_schema:
+  type: object
+  properties:
+    result: {type: object}
+state_schema: {type: object}
+memory_schema: {type: object}
+skills: [external_event_processing]
+tools: [external_rest_endpoint]
+prompts: []
+model_preferences: {}
+policy_permissions:
+  allowed_tools: [external_rest_endpoint, invoke]
+  allowed_actions: [invoke]
+  allowed_data_scopes: [external_events]
+  requires_human_approval_for: []
+guardrails: [prompt_injection, pii_leakage, business_scope]
+observability_hooks: {heartbeat: true, execution_trace: true, policy_decision: true}
+metadata:
+  timeout_seconds: 10
+  auth_env_var: SAMPLE_EXTERNAL_AGENT_API_KEY
+  retry:
+    max_attempts: 1
+status: active

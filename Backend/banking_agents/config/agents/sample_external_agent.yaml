@@ -1,0 +1,21 @@
+agent_id: sample_external_agent
+name: Sample External Agent
+owner: Integration Engineering
+business_function: External Integration
+agent_type: external
+execution_mode: decoupled
+adapter_type: rest_api
+endpoint: http://127.0.0.1:9001/invoke
+description: Generic REST contract example; not a voice-vendor implementation.
+input_schema: {type: object, required: [event], properties: {event: {type: object}}}
+output_schema: {type: object, properties: {status: {type: string}}}
+state_schema: {type: object, properties: {external_run_id: {type: string}}}
+memory_schema: {type: object, properties: {correlation: {type: object}}}
+skills: [external_event_processing]
+tools: [external_rest_endpoint]
+prompts: []
+model_preferences: {}
+policy_permissions: {allowed_tools: [external_rest_endpoint, invoke], allowed_actions: [invoke], allowed_data_scopes: [external_events], requires_human_approval_for: [sensitive_action]}
+guardrails: [prompt_injection, pii_leakage, business_scope]
+observability_hooks: {heartbeat: true, event_ingestion: true, policy_decision: true}
+status: active

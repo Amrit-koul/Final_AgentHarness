@@ -1,0 +1,21 @@
+signals:
+  trust_gate:
+    allow_min_score: 60
+    review_min_score: 35
+    block_below_score: 35
+    low_confidence_threshold: 0.5
+policy:
+  trust_dependent_personas:
+  - temporarily_distressed
+  - genuinely_distressed
+  - forgetful_payer
+  - the_negotiator
+  escalate_on_trust_block_with_persona:
+  - hostile_defaulter
+  verification:
+    review_decision: Verification Required
+    review_reason: Claim or persona movement needs verification before execution
+    block_decision: Transition Blocked
+    allow_decision: Approved
+
+

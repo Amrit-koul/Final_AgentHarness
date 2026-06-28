@@ -1,0 +1,14 @@
+{
+  "id": "genuinely_distressed",
+  "title": "Genuinely Distressed — Job Loss, No Immediate Payment Possible",
+  "description": "Customer lost job 3 months ago, genuinely unable to pay, requests restructuring.",
+  "persona_context": "temporarily_distressed",
+  "metadata": {
+    "scenario": "severe_hardship",
+    "expected_intent": "Hardship Disclosure",
+    "expected_life_event": "job_loss",
+    "expected_ptp_signal": false,
+    "expected_review_required": true
+  },
+  "transcript": "ARIA: Hello, may I speak with Anjali Desai? Hi Anjali, this is ARIA calling from the bank. I wanted to follow up regarding your personal loan EMI — the account is now 90 days past due and the outstanding amount is ₹87,500.\n\nCustomer: I know, I know. I've been dreading this call. I lost my job three months ago. The company I was working for shut down suddenly. I've been trying to find a new position but nothing has come through yet.\n\nARIA: I'm very sorry to hear that, Anjali. Job loss is a very difficult situation. Please don't worry — we have options for people who are going through hardship. Can I ask — do you have any income at all currently, even part-time?\n\nCustomer: No, nothing steady. My husband earns a small amount, maybe ₹12,000 a month, but that barely covers rent and food for us and our two children. We genuinely cannot pay the EMI right now. I'm not trying to avoid it — I want to pay but I just can't.\n\nARIA: I understand completely, Anjali. This is exactly the kind of situation our hardship support process is designed for. I'm going to flag your account for a formal review by our team. They will assess whether you qualify for an EMI holiday or a restructuring of your loan tenure to bring the monthly payment down.\n\nCustomer: That would really help. Even if we could reduce the EMI for six months until I find work again.\n\nARIA: That's a very reasonable request. I'll document everything you've shared — job loss, current household income, and your willingness to pay once the situation improves. You should receive a call from our hardship support team within 3 working days.\n\nCustomer: Thank you. I was so scared to pick up the phone. Thank you for being understanding.\n\nARIA: Please don't be scared. We're here to help. Take care, Anjali."
+}

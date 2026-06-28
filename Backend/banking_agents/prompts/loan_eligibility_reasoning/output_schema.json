@@ -1,0 +1,11 @@
+{
+  "type": "object",
+  "properties": {
+    "indicative_outcome": {"type": "string"},
+    "hard_rule_checks": {"type": "array", "items": {"type": "string"}},
+    "affordability_calculations": {"type": "array", "items": {"type": "string"}},
+    "conditions_and_missing_evidence": {"type": "array", "items": {"type": "string"}},
+    "decision_rationale": {"type": "string"},
+    "policy_sources": {"type": "array", "items": {"type": "string"}}
+  }
+}

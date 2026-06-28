@@ -1,0 +1,13 @@
+policy:
+  nba_routing:
+    hostile_defaulter:
+      trust_block: escalate_to_legal
+      default: escalate_to_field
+    unknown_insufficient_data: establish_contact
+    temporarily_distressed: offer_restructure
+    genuinely_distressed: offer_restructure
+    forgetful_payer: send_payment_link
+    the_negotiator: trigger_ots
+    reluctant_avoider: escalate_to_field
+
+

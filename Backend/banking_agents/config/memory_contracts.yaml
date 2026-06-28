@@ -1,0 +1,31 @@
+memory_contracts:
+  run:
+    description: Ephemeral execution context and trace correlation.
+    allowed_agent_ids: ["*"]
+    pii_classification: moderate
+    retention_days: 7
+    persistence: sqlite
+    redaction_required: true
+    encryption_required: false
+    access_policy: control_plane_audit_only
+    status: active
+  agent:
+    description: Agent-local workflow state.
+    allowed_agent_ids: ["*"]
+    pii_classification: low
+    retention_days: 30
+    persistence: sqlite
+    redaction_required: true
+    encryption_required: false
+    access_policy: agent_owner_and_audit
+    status: active
+  customer:
+    description: Customer context contract; raw values are never exposed by registry APIs.
+    allowed_agent_ids: [collections_workflow_agent]
+    pii_classification: high
+    retention_days: 90
+    persistence: sqlite
+    redaction_required: true
+    encryption_required: true
+    access_policy: collections_restricted
+    status: defined

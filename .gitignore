@@ -1,0 +1,23 @@
+# Environments
+venv/
+env/
+.env
+
+# Frontend build artifacts
+node_modules/
+dist/
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# IDE / Editor
+.vscode/
+.idea/
+
+# Database / Local Storage
+chroma_db/
+Backend/data/*.db
+Backend/data/*.db-*
+Backend/logs/*.jsonl

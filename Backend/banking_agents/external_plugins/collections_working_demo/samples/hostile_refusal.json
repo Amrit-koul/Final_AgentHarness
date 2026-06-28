@@ -1,0 +1,14 @@
+{
+  "id": "hostile_refusal",
+  "title": "Hostile Defaulter — Refusal and Escalation Threat",
+  "description": "Customer is hostile, refuses payment, threatens complaint and legal action.",
+  "persona_context": "hostile_defaulter",
+  "metadata": {
+    "scenario": "hostility",
+    "expected_intent": "Objection / Refusal",
+    "expected_life_event": null,
+    "expected_ptp_signal": false,
+    "expected_review_required": true
+  },
+  "transcript": "ARIA: Hello, may I speak with Vikram Tiwari? Hi Vikram, this is ARIA from the bank regarding your personal loan account which is 72 days past due. We wanted to check in about the outstanding amount of ₹1,42,000.\n\nCustomer: I already told you people last time — I am NOT paying this. The interest rate is usurious and I was misled when I took this loan. I will not pay.\n\nARIA: I understand you have concerns about the loan terms, Vikram. I'd like to help resolve this — could you share more about what happened?\n\nCustomer: Don't give me that. I know my rights. I am filing a complaint with the banking ombudsman. I have a lawyer now. If anyone from your bank calls me again, I will consider it harassment and I will take legal action. Stop calling me.\n\nARIA: I hear you, Vikram. I want to let you know I'm documenting this conversation and your feedback will be escalated to our dispute resolution team. We take such concerns seriously. Is there anything else I can note for the supervisor who will follow up?\n\nCustomer: Tell them to review the loan agreement. That is all I have to say.\n\nARIA: Understood. This call has been recorded and will be reviewed. You will receive a reference number for the escalation. Thank you, Vikram."
+}

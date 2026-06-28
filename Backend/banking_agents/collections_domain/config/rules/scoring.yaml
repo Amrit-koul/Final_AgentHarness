@@ -1,0 +1,84 @@
+signals:
+  atp_low_threshold: 40
+  atp_high_threshold: 65
+  itp_low_threshold: 40
+  itp_high_threshold: 65
+  trust_low_threshold: 40
+  trust_high_threshold: 65
+  contactability_low_threshold: 35
+  contactability_high_threshold: 60
+  self_cure_low_threshold: 35
+  self_cure_high_threshold: 65
+  data_sufficiency:
+    min_interactions: 3
+    or_has_ptp_history: true
+    or_has_claims: true
+  persona_confidence_bands:
+    high: 0.75
+    medium: 0.6
+    low: 0.45
+  required_signal_penalty: 15
+scoring:
+  atp:
+    cibil_floor: 300
+    cibil_range: 600
+    emi_burden_low_pct: 5.0
+    emi_burden_penalty: 15
+    partial_payment_bonus: 3
+  itp:
+    base: 50
+    low_dpd_bonus: 5
+    dpd_penalty_per_day: 0.315
+    dpd_penalty_cap: 20
+    voice_no_pickup_penalty: 5
+    wa_not_read_penalty: 5
+    field_refused_penalty: 20
+    ptp_secured_bonus: 20
+    callback_bonus: 15
+    extension_request_bonus: 10
+    payment_attempt_bonus: 15
+    documents_submitted_bonus: 10
+    honored_ptp_bonus: 10
+    broken_ptp_penalty: 5
+    broken_ptp_context_discount: 5
+    escalated_penalty: 10
+    score_cap: 90
+  trust:
+    commitment_reliability_weight: 0.6
+    statement_credibility_weight: 0.4
+    cr_base: 50
+    sc_base: 50
+    honored_ptp_cr_bonus: 15
+    broken_ptp_cr_penalty: 20
+    verified_claim_sc_bonus: 15
+    contradicted_claim_sc_penalty: 25
+    rejected_claim_sc_penalty: 15
+    velocity_days_threshold: 60
+    velocity_count_threshold: 2
+    velocity_penalty: 10
+    unverified_claim_conf_reduction: 0.2
+  contactability:
+    voice_weight: 0.4
+    callback_weight: 0.2
+    whatsapp_weight: 0.3
+    physical_weight: 0.1
+    field_present_proxy: 30
+    callback_initiated_proxy: 80
+    default_neutral: 50
+  self_cure:
+    atp_weight: 0.35
+    itp_weight: 0.35
+    dpd_weight: 0.2
+    history_weight: 0.1
+    verified_hardship_modifier: -15
+    escalation_history_score: 10
+    no_escalation_score: 50
+    honored_ptp_history_score: 40
+    bucket_baselines:
+      pre_due: 95.0
+      X1: 80.0
+      X2: 45.0
+      X3: 15.0
+      legal: 5.0
+
+

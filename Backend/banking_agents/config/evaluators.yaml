@@ -1,0 +1,7 @@
+evaluators:
+  rag_groundedness: {name: RAG Groundedness, description: Measures whether answers are supported by retrieved context., applies_to: rag, method: heuristic, score_range: [0, 1], output_contract: {type: object}, owner: AI Quality, risk_tier: medium, status: active}
+  rag_semantic_similarity: {name: RAG Semantic Similarity, description: Compares generated answers to expected semantic meaning., applies_to: rag, method: embedding_similarity, score_range: [0, 1], output_contract: {type: object}, owner: AI Quality, risk_tier: low, status: active}
+  rag_llm_judge: {name: RAG LLM Judge, description: Reviews answer quality using an LLM judge., applies_to: rag, method: llm_judge, score_range: [0, 1], output_contract: {type: object}, owner: AI Quality, risk_tier: medium, status: defined}
+  citation_coverage: {name: Citation Coverage, description: Measures citation support., applies_to: rag, method: rule_based, score_range: [0, 1], output_contract: {type: object}, owner: AI Quality, risk_tier: low, status: active}
+  policy_compliance: {name: Policy Compliance, description: Checks output against policy boundaries., applies_to: policy, method: rule_based, score_range: [0, 1], output_contract: {type: object}, owner: Risk Engineering, risk_tier: high, status: defined}
+  collections_trust_gate_review: {name: Collections Trust Gate Review, description: Registry definition for trust-gate review., applies_to: collections, method: rule_based, score_range: [0, 1], output_contract: {type: object}, owner: Collections Operations, risk_tier: high, status: defined}

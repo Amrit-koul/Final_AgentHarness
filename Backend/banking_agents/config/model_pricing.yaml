@@ -1,0 +1,16 @@
+# Demo governance estimates only; not invoice reconciliation or billing data.
+models:
+  - provider: groq
+    model: llama-3.1-8b-instant
+    input_cost_per_1k_tokens: 0.00005
+    output_cost_per_1k_tokens: 0.00008
+    currency: USD
+    effective_date: "2026-06-26"
+    estimated: true
+  - provider: groq
+    model: llama-3.3-70b-versatile
+    input_cost_per_1k_tokens: 0.00060
+    output_cost_per_1k_tokens: 0.00080
+    currency: USD
+    effective_date: "2026-06-26"
+    estimated: true

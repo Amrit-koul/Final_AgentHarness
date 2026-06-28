@@ -1,0 +1,8 @@
+prompt_id: policy_assistant_retrieval_answer
+version: 1.0.0
+owner: retail_banking_policy
+risk_level: high
+default_model: llama-3.1-70b-versatile
+status: active
+created_at: 2026-06-25
+updated_at: 2026-06-25

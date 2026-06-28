@@ -1,0 +1,5 @@
+prompts:
+  voice:
+    summary_instruction: "Write a concise 2-3 sentence post-call summary covering payment commitment, hardship, objection, sentiment, and agreed next step. Be factual and professional."
+
+

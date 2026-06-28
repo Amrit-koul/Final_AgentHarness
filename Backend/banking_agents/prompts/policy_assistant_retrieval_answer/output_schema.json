@@ -1,0 +1,4 @@
+{
+  "type": "string",
+  "description": "Evidence package passed as the user message to the policy assistant model."
+}

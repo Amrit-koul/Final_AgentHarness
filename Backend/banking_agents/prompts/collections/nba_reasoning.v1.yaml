@@ -1,0 +1,10 @@
+prompt_id: nba_reasoning
+version: v1
+owner: Collections Operations
+business_function: Collections
+description: Explains a policy-routed next best action.
+input_variables: [persona, trust_gate, policy_route]
+template: |-
+  Explain the next best action for persona {persona}, trust gate {trust_gate}, and approved policy route {policy_route}. Do not override policy or propose prohibited conduct.
+expected_output: Action, channel, priority, reason, and approval requirement.
+safety_notes: RBI-compliant respectful collections conduct; sensitive actions require approval.

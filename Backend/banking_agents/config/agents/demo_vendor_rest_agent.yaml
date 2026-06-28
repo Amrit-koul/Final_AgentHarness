@@ -1,0 +1,42 @@
+agent_id: demo_vendor_rest_agent
+name: Demo Vendor REST Agent
+owner: Platform / Vendor Integration
+business_function: External Agent Integration
+agent_type: external
+execution_mode: synchronous
+adapter_type: rest_api
+endpoint: http://127.0.0.1:9001/invoke
+description: Demo-only independently hosted vendor agent governed through the shared control plane.
+input_schema:
+  type: object
+  required: [query]
+  properties:
+    query: {type: string}
+output_schema:
+  type: object
+  required: [answer, confidence, vendor, trace_id]
+  properties:
+    answer: {type: string}
+    confidence: {type: number}
+    vendor: {type: string}
+    trace_id: {type: string}
+state_schema: {type: object}
+memory_schema: {type: object}
+skills: [external_agent_invocation, vendor_response_normalization]
+tools: [external_api_call]
+prompts: []
+model_preferences: {}
+policy_permissions:
+  allowed_tools: [external_api_call]
+  allowed_actions: [invoke]
+  allowed_data_scopes: [external_agent_requests]
+  requires_human_approval_for: []
+guardrails: [pii_leakage, unsafe_sql, prompt_injection, business_scope]
+observability_hooks: {execution_trace: true, policy_decision: true, audit: true, usage_cost: true}
+metadata:
+  timeout_seconds: 5
+  retry:
+    max_attempts: 1
+  # Empty means this demo endpoint has no bearer token. Set an env-var name for authenticated vendors.
+  auth_env_var: ""
+status: active

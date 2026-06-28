@@ -1,0 +1,7 @@
+[
+  {"id":"ACC-DEMO-01","name":"Rajesh Kumar","city":"Bengaluru","product":"Personal Loan","persona":"forgetful_payer","bucket":"X1","dpd":6,"emi":18500,"outstanding":850000,"scores":{"ability_to_pay":88,"intent_to_pay":92,"self_cure_probability":84,"trust_score":82,"contactability":72}},
+  {"id":"ACC-DEMO-02","name":"Amit Sharma","city":"Pune","product":"Personal Loan","persona":"temporarily_distressed","bucket":"X1","dpd":6,"emi":22000,"outstanding":1200000,"scores":{"ability_to_pay":76,"intent_to_pay":78,"self_cure_probability":65,"trust_score":80,"contactability":62}},
+  {"id":"ACC-DEMO-03","name":"Ravi Verma","city":"Nagpur","product":"Business Loan","persona":"hostile_defaulter","bucket":"X2","dpd":38,"emi":38000,"outstanding":2500000,"scores":{"ability_to_pay":72,"intent_to_pay":32,"self_cure_probability":18,"trust_score":28,"contactability":72}},
+  {"id":"ACC-DEMO-04","name":"Prakash Desai","city":"Surat","product":"Auto Loan","persona":"reluctant_avoider","bucket":"X3","dpd":72,"emi":14500,"outstanding":720000,"scores":{"ability_to_pay":74,"intent_to_pay":18,"self_cure_probability":10,"trust_score":22,"contactability":18}},
+  {"id":"ACC-DEMO-05","name":"Meera Iyer","city":"Mumbai","product":"Home Loan","persona":"the_negotiator","bucket":"X2","dpd":45,"emi":42000,"outstanding":3100000,"scores":{"ability_to_pay":79,"intent_to_pay":72,"self_cure_probability":38,"trust_score":58,"contactability":81}}
+]

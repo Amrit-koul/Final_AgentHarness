@@ -1,0 +1,11 @@
+prompt_id: risk_explanation
+version: v1
+owner: Retail Credit Risk
+business_function: Loan Eligibility
+description: Explains risk factors without exposing sensitive raw data.
+input_variables: [risk_factors]
+template: |-
+  Explain these risk factors in business language, separating policy failures, affordability concerns, and missing evidence:
+  {risk_factors}
+expected_output: Concise categorized risk explanation and escalation recommendation.
+safety_notes: Use bands and derived ratios; do not reproduce bureau reports or identifiers.

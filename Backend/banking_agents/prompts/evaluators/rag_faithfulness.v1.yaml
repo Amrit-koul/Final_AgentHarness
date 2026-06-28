@@ -1,0 +1,11 @@
+prompt_id: rag_faithfulness
+version: 1.0.0
+source: local_yaml
+owner: agent_harness
+template: |
+  Evaluate the answer against only the retrieved context. Assess faithfulness, answer relevance,
+  policy-safe language, and unsupported claims. Return only JSON:
+  {"score": number from 0 to 1, "reason": "short explanation"}.
+  Query: {query}
+  Answer: {answer}
+  Retrieved context: {context}

@@ -1,0 +1,13 @@
+{
+  "transcript": "Customer: I lost my job last month. I can pay 1500 on 2026-07-15 once my final salary clears.",
+  "evidence": {
+    "summary": "Customer reported a recent job loss and made a payment commitment.",
+    "sentiment": "anxious",
+    "stress_score": 85,
+    "life_event_detected": true,
+    "life_event_type": "job_loss",
+    "life_event_details": "Customer reported loss of employment last month.",
+    "ptp_date": "2026-07-15",
+    "ptp_amount": 1500
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "id": "hardship_medical",
+  "title": "Medical Hardship — Hospitalization Disclosure",
+  "description": "Customer discloses wife's hospitalization, offers partial PTP on salary credit date.",
+  "persona_context": "forgetful_payer",
+  "metadata": {
+    "scenario": "life_event",
+    "expected_intent": "Hardship Disclosure",
+    "expected_life_event": "medical",
+    "expected_ptp_signal": true,
+    "expected_review_required": true
+  },
+  "transcript": "ARIA: Hello, may I speak with Ramesh Sharma? Hi Ramesh, this is ARIA from the bank — calling about your EMI of ₹18,500 on your personal loan, which is 35 days past due. Is everything okay?\n\nCustomer: Yes, I'm Ramesh. Look, I'm really sorry about the payment. My wife was admitted to the hospital last month — she had emergency surgery. I've been managing hospital bills and I just couldn't get to this.\n\nARIA: I'm very sorry to hear that, Ramesh. I hope she is recovering well. Please don't worry about the EMI right now — can you tell me a little more so we can see how we can help?\n\nCustomer: She's better now, thank God. The surgery cost us almost ₹1.5 lakh out of pocket. I've used up all my savings. I still have my job, my salary comes on the 5th of every month. I can pay the EMI — maybe ₹5,000 this month on the 5th, and the balance with next month's EMI?\n\nARIA: I understand. That's a reasonable request given your situation. I'll flag this call for a supervisor review so we can formally agree on a payment arrangement. Is the 5th of July the date you're committing to for the ₹5,000 payment?\n\nCustomer: Yes, 5th July for ₹5,000. And I'll clear the rest by August 5th.\n\nARIA: Thank you, Ramesh. I've noted your commitment — ₹5,000 on 5th July and the remaining balance by 5th August. We'll pause automated outreach until the 5th. Please take care of your family.\n\nCustomer: Thank you for understanding. I appreciate it."
+}
