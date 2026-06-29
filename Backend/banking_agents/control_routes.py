@@ -123,7 +123,73 @@ async def agent(agent_id: str):
 
 
 @router.get("/agents/{agent_id}/contract")
-async def agent_contract(agent_id: str): return await agent(agent_id)
+async def agent_contract(agent_id: str):
+    """Return the Agent Contract for a registered agent.
+
+    This is a read-only view of the manifest-backed contract used by the harness
+    to govern agent execution.  It contains only contract/manifest fields — no
+    runtime metrics, no event history, no enriched primitives.  The caller should
+    use GET /agents/{agent_id} for the full runtime-enriched agent detail.
+    """
+    try:
+        contract = control_plane.registry.get_contract(agent_id)
+    except (AgentNotFoundError, KeyError) as exc:
+        raise HTTPException(404, str(exc))
+
+    raw = contract.to_dict()
+    meta = raw.get("metadata", {})
+    is_demo = bool(meta.get("demo", False))
+
+    return {
+        "agent_id": raw["agent_id"],
+        "contract": {
+            "identity": {
+                "agent_id":          raw.get("agent_id"),
+                "name":              raw.get("name"),
+                "description":       raw.get("description") or None,
+                "version":           raw.get("version") or "1.0.0",
+                "owner":             raw.get("owner"),
+                "business_function": raw.get("business_function"),
+                "agent_type":        raw.get("agent_type"),
+                "execution_mode":    raw.get("execution_mode"),
+            },
+            "adapter": {
+                "adapter_type": raw.get("adapter_type"),
+                "entrypoint":   raw.get("entrypoint") or None,
+                "endpoint":     raw.get("endpoint") or None,
+            },
+            "schemas": {
+                "input_schema":  raw.get("input_schema") or {},
+                "output_schema": raw.get("output_schema") or {},
+                "state_schema":  raw.get("state_schema") or {},
+                "memory_schema": raw.get("memory_schema") or {},
+            },
+            "capabilities": {
+                "skills":            raw.get("skills") or [],
+                "tools":             raw.get("tools") or [],
+                "prompts":           raw.get("prompts") or [],
+                "model_preferences": raw.get("model_preferences") or {},
+            },
+            "permissions": {
+                "policy_permissions":  raw.get("policy_permissions") or {},
+                "allowed_data_scopes": (raw.get("policy_permissions") or {}).get("allowed_data_scopes") or [],
+            },
+            "guardrails": raw.get("guardrails") or [],
+            "observability": {
+                "hooks": raw.get("observability_hooks") or {},
+            },
+            "lifecycle": {
+                "status":         raw.get("status"),
+                "default_status": (meta.get("default_status") or raw.get("status")),
+            },
+            "metadata": {
+                k: v for k, v in meta.items()
+                if k not in {"source_file", "safe_demo_claims", "avoid_claiming"}
+            },
+        },
+        "source_file": meta.get("source_file") or None,
+        "_demo": is_demo,
+    }
 
 
 @router.get("/agents/{agent_id}/status")

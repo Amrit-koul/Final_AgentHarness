@@ -57,10 +57,12 @@ export default function CollectionsAgentPage() {
   const [voiceConversation, setVoiceConversation] = useState([]);
   const [voiceFinalResult, setVoiceFinalResult] = useState(null);
   const [recording, setRecording] = useState(false);
+  const [callActive, setCallActive] = useState(false);
   const voiceConversationRef = useRef([]);
   const recorderRef = useRef(null);
   const streamRef = useRef(null);
   const audioChunksRef = useRef([]);
+  const recordingStartRef = useRef(null);
 
   const [error, setError] = useState('');
   const selectedAcc = useMemo(() => accounts.find(a => a.id === selectedAccId), [accounts, selectedAccId]);
@@ -71,6 +73,7 @@ export default function CollectionsAgentPage() {
     controlPlaneApi.getCollectionsTranscripts().then(res => setTranscripts(res?.transcripts || []));
     refreshAgentStatus();
     refreshVoiceStatus();
+    return () => stopMediaStream();
   }, []);
 
   // When account changes, reset state and run pre-call automatically
@@ -84,6 +87,11 @@ export default function CollectionsAgentPage() {
     setVoiceMessage('');
     setHistoryData(null);
     setActiveTab('workflow');
+    if (callActive) {
+      stopMediaStream();
+      setCallActive(false);
+      setRecording(false);
+    }
     
     runPreCall(selectedAccId);
     loadHistory(selectedAccId);
@@ -129,6 +137,9 @@ export default function CollectionsAgentPage() {
     return payload?.greeting || payload;
   }
 
+  // Opens the call: requests mic permission, plays ARIA's opening greeting,
+  // and arms the mic for hold-to-talk. Does NOT start recording by itself —
+  // the customer must press-and-hold the talk button for each turn.
   async function startLiveVoice() {
     if (!selectedAccId || !voiceStatus?.ready) return;
     setVoiceLoading(true); setError(''); setVoiceMessage('Preparing live voice session...');
@@ -136,6 +147,9 @@ export default function CollectionsAgentPage() {
       if (!navigator.mediaDevices?.getUserMedia || typeof MediaRecorder === 'undefined') {
         throw new Error('This browser does not support MediaRecorder microphone capture');
       }
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      streamRef.current = stream;
+
       const start = await controlPlaneApi.startCollectionsVoice(selectedAccId);
       const greeting = greetingFromStartResult(start);
       const greetingText = greeting?.aria_text || '';
@@ -146,19 +160,8 @@ export default function CollectionsAgentPage() {
       }
       playVoiceAudio(greeting?.audio_b64);
 
-      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-      const mimeType = MediaRecorder.isTypeSupported('audio/webm;codecs=opus') ? 'audio/webm;codecs=opus' : 'audio/webm';
-      const recorder = new MediaRecorder(stream, { mimeType });
-      audioChunksRef.current = [];
-      recorder.ondataavailable = (event) => {
-        if (event.data && event.data.size > 0) audioChunksRef.current.push(event.data);
-      };
-      recorder.onstop = () => handleRecordingStopped();
-      recorderRef.current = recorder;
-      streamRef.current = stream;
-      recorder.start();
-      setRecording(true);
-      setVoiceMessage('Recording live browser audio...');
+      setCallActive(true);
+      setVoiceMessage('Call connected. Hold the talk button to speak as the customer.');
     } catch (err) {
       setError(err.message);
       setVoiceMessage('');
@@ -173,16 +176,49 @@ export default function CollectionsAgentPage() {
     streamRef.current = null;
   }
 
-  function stopLiveVoice() {
+  // Hold-to-talk: press and hold to record one customer turn, release to send it.
+  // This does NOT end the call — it just sends one turn and waits for the next hold.
+  async function startTurnRecording() {
+    if (!callActive || voiceLoading || recording) return;
+    try {
+      if (!streamRef.current) {
+        streamRef.current = await navigator.mediaDevices.getUserMedia({ audio: true });
+      }
+      const mimeType = MediaRecorder.isTypeSupported('audio/webm;codecs=opus') ? 'audio/webm;codecs=opus' : 'audio/webm';
+      const recorder = new MediaRecorder(streamRef.current, { mimeType });
+      audioChunksRef.current = [];
+      recordingStartRef.current = Date.now();
+      recorder.ondataavailable = (event) => {
+        if (event.data && event.data.size > 0) audioChunksRef.current.push(event.data);
+      };
+      recorder.onstop = () => handleTurnRecordingStopped();
+      recorderRef.current = recorder;
+      recorder.start();
+      setRecording(true);
+      setVoiceMessage('Recording... release to send');
+    } catch (err) {
+      setError(err.message);
+      setVoiceMessage('');
+    }
+  }
+
+  function stopTurnRecording() {
     if (recorderRef.current && recorderRef.current.state !== 'inactive') {
-      setVoiceMessage('Stopping recording and sending audio to governed STT...');
       recorderRef.current.stop();
     }
   }
 
-  async function handleRecordingStopped() {
+  // Called when the customer releases the hold-to-talk button. Sends exactly
+  // one turn to the backend and stays on the call — it does NOT finalize.
+  async function handleTurnRecordingStopped() {
     setRecording(false);
-    stopMediaStream();
+    const duration = Date.now() - (recordingStartRef.current || 0);
+    if (duration < 800) {
+      setVoiceMessage('Hold the button a little longer and speak clearly.');
+      audioChunksRef.current = [];
+      recorderRef.current = null;
+      return;
+    }
     setVoiceLoading(true); setError('');
     try {
       const blob = new Blob(audioChunksRef.current, { type: 'audio/webm' });
@@ -193,6 +229,10 @@ export default function CollectionsAgentPage() {
         audio_b64,
         conversation: voiceConversationRef.current,
       });
+      if (!turn.transcript) {
+        setVoiceMessage('No speech detected — hold the button longer and speak clearly.');
+        return;
+      }
       const nextConversation = [
         ...voiceConversationRef.current,
         { role: 'user', content: turn.transcript || '' },
@@ -201,10 +241,33 @@ export default function CollectionsAgentPage() {
       voiceConversationRef.current = nextConversation;
       setVoiceConversation(nextConversation);
       playVoiceAudio(turn.audio_b64);
-      setVoiceMessage('Transcript received. Running governed post-call finalization...');
+      setVoiceMessage('Hold the button to reply, or end the call when finished.');
+    } catch (err) {
+      setError(err.message);
+      setVoiceMessage('');
+    } finally {
+      setVoiceLoading(false);
+      audioChunksRef.current = [];
+      recorderRef.current = null;
+    }
+  }
+
+  // Explicit end-of-call action: stops the mic and runs governed finalization
+  // exactly once, over the full multi-turn conversation collected so far.
+  async function endLiveVoiceCall() {
+    stopTurnRecording();
+    stopMediaStream();
+    setCallActive(false);
+    if (!voiceConversationRef.current.length) {
+      setVoiceMessage('');
+      return;
+    }
+    setVoiceLoading(true); setError('');
+    setVoiceMessage('Call ended. Running governed post-call finalization...');
+    try {
       const finalResult = await controlPlaneApi.finalizeCollectionsVoice({
         account_id: selectedAccId,
-        conversation: nextConversation,
+        conversation: voiceConversationRef.current,
       });
       setVoiceFinalResult(finalResult);
       setPostCallResult(finalResult);
@@ -217,8 +280,6 @@ export default function CollectionsAgentPage() {
       setVoiceMessage('');
     } finally {
       setVoiceLoading(false);
-      audioChunksRef.current = [];
-      recorderRef.current = null;
     }
   }
 
@@ -344,12 +405,27 @@ export default function CollectionsAgentPage() {
                 {voiceStatus?.ready ? (
                   <>
                     <div className="collections-muted" style={{ marginBottom: 12 }}>
-                      Browser microphone audio is sent to the governed backend as MediaRecorder audio/webm, transcribed by STT, and finalized through post-call governance.
+                      Browser microphone audio is sent to the governed backend as MediaRecorder audio/webm, transcribed by STT, and finalized through post-call governance once the call ends.
                     </div>
                     <div style={{ display: 'flex', gap: 10, alignItems: 'center', flexWrap: 'wrap' }}>
-                      <Btn onClick={startLiveVoice} loading={voiceLoading && !recording} disabled={recording || voiceLoading || reviewBlocked}>Start Recording</Btn>
-                      <Btn onClick={stopLiveVoice} disabled={!recording}>Stop Recording</Btn>
-                      <StatusChip status={recording ? 'active' : 'ready'} />
+                      {!callActive ? (
+                        <Btn onClick={startLiveVoice} loading={voiceLoading} disabled={voiceLoading || reviewBlocked}>Start Call</Btn>
+                      ) : (
+                        <>
+                          <Btn
+                            onMouseDown={startTurnRecording}
+                            onMouseUp={stopTurnRecording}
+                            onMouseLeave={() => recording && stopTurnRecording()}
+                            onTouchStart={(e) => { e.preventDefault(); startTurnRecording(); }}
+                            onTouchEnd={(e) => { e.preventDefault(); stopTurnRecording(); }}
+                            disabled={voiceLoading}
+                          >
+                            {recording ? '🎙 Recording... release to send' : voiceLoading ? 'Processing...' : '🎙 Hold to Talk'}
+                          </Btn>
+                          <Btn onClick={endLiveVoiceCall} disabled={voiceLoading && recording}>📵 End Call</Btn>
+                        </>
+                      )}
+                      <StatusChip status={callActive ? (recording ? 'active' : 'ready') : 'idle'} />
                     </div>
                     {voiceMessage && <div className="cc-notice" style={{ marginTop: 12 }}>{voiceMessage}</div>}
                     {voiceConversation.length > 0 && (

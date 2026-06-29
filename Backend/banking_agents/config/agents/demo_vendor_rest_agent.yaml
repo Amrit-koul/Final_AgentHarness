@@ -6,7 +6,11 @@ agent_type: external
 execution_mode: synchronous
 adapter_type: rest_api
 endpoint: http://127.0.0.1:9001/invoke
-description: Demo-only independently hosted vendor agent governed through the shared control plane.
+description: >
+  Demo/test REST adapter contract. Illustrates how an independently hosted third-party agent
+  plugs into the harness via an adapter boundary: the harness applies policy checks, guardrails,
+  lifecycle status, and audit tracing before and after the HTTP call. The vendor endpoint is a
+  local mock service (127.0.0.1:9001) included for demo purposes only — not a production integration.
 input_schema:
   type: object
   required: [query]
@@ -34,6 +38,11 @@ policy_permissions:
 guardrails: [pii_leakage, unsafe_sql, prompt_injection, business_scope]
 observability_hooks: {execution_trace: true, policy_decision: true, audit: true, usage_cost: true}
 metadata:
+  demo: true
+  demo_notes: >
+    Local mock vendor service at 127.0.0.1:9001 must be running for invocation.
+    This contract exists to demonstrate the REST adapter boundary and harness governance
+    path, not to represent a real vendor integration.
   timeout_seconds: 5
   retry:
     max_attempts: 1

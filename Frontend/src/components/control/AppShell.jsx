@@ -6,12 +6,11 @@ import { useControlData } from '../../hooks/useControlData';
 const NAV_ITEMS = [
   ['/control/tower', 'Control Tower', '▦'],
   ['/control/agents', 'Agent Registry', '☷'],
-  ['/control/run-console', 'Run Console', '▶'],
   ['/control/observability', 'Observability', '⌁'],
   ['/control/policy-guardrails', 'Policy & Guardrails', '◇'],
   ['/control/kill-switch', 'Kill Switch & Degradation', '⏻'],
   ['/control/audit-logs', 'Audit Logs', '▤'],
-  ['/control/onboarding', 'Agent Onboarding', '＋'],
+  ['/control/onboarding', 'Agent Contract', '⬡'],
   ['/control/usage-cost', 'Usage & Cost', '$'],
   ['/control/rag-quality', 'RAG Quality', '≈'],
   ['/control/primitives', 'Agentic Primitives', '◆'],

@@ -144,12 +144,33 @@ export default function KillSwitchDegradation() {
     (out, s) => ({ ...out, [s]: data.agents.filter((a) => a.status === s).length }), {}
   ), [data.agents]);
 
-  const timeline = useMemo(() => [
-    ...kill.map((x) => ({ ...x, type: 'Lifecycle Status', time: x.timestamp, trigger: x.reason, next: x.new_status })),
-    ...degradation.map((x) => ({ ...x, type: 'Quality Degradation', time: x.created_at || x.timestamp, trigger: x.reason, next: 'review' })),
-    ...guardrails.map((x) => ({ ...x, type: 'Guardrail Block', time: x.timestamp, trigger: x.reason, next: x.decision })),
-    ...policy.map((x) => ({ ...x, type: 'Policy Decision', time: x.timestamp, trigger: x.reason, next: x.decision })),
-  ].sort((a, b) => String(b.time).localeCompare(String(a.time))).slice(0, 30), [kill, degradation, guardrails, policy]);
+  const timeline = useMemo(() => {
+    // ── Label mapping rules ──────────────────────────────────────────────────
+    // kill_switch_events where new_status is 'disabled' or 'quarantined'
+    //   → "Kill Switch Triggered"  (actual hard stop)
+    // kill_switch_events where new_status is 'review'
+    //   → "Automatic Review Triggered"  (soft intervention, not a kill switch)
+    // kill_switch_events where new_status is 'active' and source is 'manual_admin'
+    //   → "Manual Override — Reactivated"
+    // degradation_events
+    //   → "Quality Degradation Detected"
+    // guardrail_events
+    //   → "Guardrail Block"
+    // policy_decisions
+    //   → "Policy Decision"
+    function killLabel(x) {
+      if (x.source === 'manual_admin') return 'Manual Override';
+      if (x.new_status === 'disabled' || x.new_status === 'quarantined') return 'Kill Switch Triggered';
+      if (x.new_status === 'review') return 'Automatic Review Triggered';
+      return 'Lifecycle Status Change';
+    }
+    return [
+      ...kill.map((x) => ({ ...x, type: killLabel(x), time: x.timestamp, trigger: x.reason, next: x.new_status })),
+      ...degradation.map((x) => ({ ...x, type: 'Quality Degradation Detected', time: x.created_at || x.timestamp, trigger: x.reason, next: 'review' })),
+      ...guardrails.map((x) => ({ ...x, type: 'Guardrail Block', time: x.timestamp, trigger: x.reason, next: x.decision })),
+      ...policy.map((x) => ({ ...x, type: 'Policy Decision', time: x.timestamp, trigger: x.reason, next: x.decision })),
+    ].sort((a, b) => String(b.time).localeCompare(String(a.time))).slice(0, 30);
+  }, [kill, degradation, guardrails, policy]);
 
   async function applyOverride() {
     setBusy('override');
@@ -194,8 +215,22 @@ export default function KillSwitchDegradation() {
         { label: 'Human Overrides', value: kill.filter((x) => x.source === 'manual_admin').length, accent: 'teal' },
       ]} />
 
+      {/* Lifecycle logic explanation */}
+      <div style={{ display: 'flex', gap: 10, margin: '16px 0', flexWrap: 'wrap' }}>
+        {[
+          { icon: '🟡', label: 'Soft quality issue', desc: 'RAG score below threshold on a valid policy query — agent moved to Review. Still operational with human oversight.' },
+          { icon: '🔴', label: 'Repeated / critical issue', desc: 'Multiple RAG failures, guardrail breach, or high error rate — agent Disabled or Quarantined. Manual override required.' },
+          { icon: '🔵', label: 'Manual override', desc: 'Operator-approved lifecycle change via this panel. Recorded as an audited human action with reason and approver.' },
+        ].map(item => (
+          <div key={item.label} style={{ flex: '1 1 200px', padding: '10px 14px', borderRadius: 6, background: 'var(--surface-inset)', border: '1px solid var(--border)', fontSize: 12 }}>
+            <div style={{ fontWeight: 700, marginBottom: 4, color: 'var(--text)' }}>{item.icon} {item.label}</div>
+            <div style={{ color: 'var(--text-muted)', lineHeight: 1.5 }}>{item.desc}</div>
+          </div>
+        ))}
+      </div>
+
       {/* Control point legend */}
-      <div style={{ display: 'flex', gap: 12, margin: '16px 0', flexWrap: 'wrap' }}>
+      <div style={{ display: 'flex', gap: 10, margin: '0 0 16px 0', flexWrap: 'wrap' }}>
         {CONTROL_POINTS.map(cp => (
           <div key={cp.name} style={{ flex: '1 1 200px', padding: '10px 14px', borderRadius: 6, background: 'var(--surface-inset)', border: '1px solid var(--border)', fontSize: 12 }}>
             <div style={{ fontWeight: 700, marginBottom: 4, color: 'var(--text)' }}>{cp.name}</div>
@@ -208,15 +243,7 @@ export default function KillSwitchDegradation() {
         <LifecycleBoard agents={data.agents} kill={kill} policy={policy} evaluations={data.evaluations} />
       </SectionCard>
 
-      <div className="cc-grid-2 cc-top-gap">
-        <SectionCard title="Automatic Interventions" subtitle="Unified evidence timeline from lifecycle, degradation, policy, and guardrail records.">
-          <Timeline rows={timeline} />
-        </SectionCard>
-        <SectionCard title="RAG Quality Degradation Monitor" subtitle="Retrieval quality signals for RAG agents only. Workflow, voice, and vendor agents are not shown here.">
-          <Quality rows={ragEvaluations} />
-        </SectionCard>
-      </div>
-
+      {/* Human Override placed ABOVE Automatic Interventions — always visible without excessive scrolling */}
       <SectionCard className="cc-top-gap" title="Human Override / Reactivation" subtitle="An audited administrative workflow for approved lifecycle changes.">
         <div className="cc-detail-grid">
           <dt>Agent</dt><dd><select className="cc-input" value={agentId} onChange={(e) => setAgentId(e.target.value)}>{data.agents.map((a) => <option key={a.agent_id} value={a.agent_id}>{a.name || a.agent_id}</option>)}</select></dd>
@@ -227,6 +254,15 @@ export default function KillSwitchDegradation() {
         </div>
         <ActionButton loading={busy === 'override'} onClick={applyOverride}>Apply Audited Override</ActionButton>
       </SectionCard>
+
+      <div className="cc-grid-2 cc-top-gap">
+        <SectionCard title="Automatic Interventions" subtitle="Most recent first. RAG quality failures trigger Review, not Kill Switch, unless repeated or critical.">
+          <Timeline rows={timeline} />
+        </SectionCard>
+        <SectionCard title="RAG Quality Degradation Monitor" subtitle="Retrieval quality signals for RAG agents only. Workflow, voice, and vendor agents are not shown here.">
+          <Quality rows={ragEvaluations} />
+        </SectionCard>
+      </div>
 
       <SectionCard className="cc-top-gap" title="Admin Validation Controls" subtitle="For internal validation only." right={<button className="cc-button" onClick={() => setOpen(!open)}>{open ? 'Hide controls' : 'Show controls'}</button>}>
         {open && <div className="cc-actions">

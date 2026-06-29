@@ -26,8 +26,15 @@ class DegradationMonitor:
             if metadata.get("is_simulated") or source != "runtime":
                 sample = None
         if not reason and rag and sample:
-            checks = [("groundedness_score", "min_groundedness"), ("semantic_similarity_score", "min_semantic_similarity"), ("citation_coverage", "min_citation_coverage"), ("llm_judge_score", "min_llm_judge_score"), ("answer_relevance_score", "min_answer_relevance")]
-            if any(sample.get(score) is not None and threshold in rag_rules and sample[score] < rag_rules[threshold] for score, threshold in checks): reason = "rag_quality_degradation"
+            # Secondary safeguard: if retrieved_chunk_count is 0, the query had
+            # no retrievable evidence — this means unsupported input (e.g. a
+            # greeting slipped through), NOT a policy-question quality failure.
+            # Do not record rag_quality_degradation for zero-retrieval runs.
+            if (sample.get("retrieved_chunk_count") or 0) == 0:
+                pass  # treat as unsupported_input — no degradation signal
+            else:
+                checks = [("groundedness_score", "min_groundedness"), ("semantic_similarity_score", "min_semantic_similarity"), ("citation_coverage", "min_citation_coverage"), ("llm_judge_score", "min_llm_judge_score"), ("answer_relevance_score", "min_answer_relevance")]
+                if any(sample.get(score) is not None and threshold in rag_rules and sample[score] < rag_rules[threshold] for score, threshold in checks): reason = "rag_quality_degradation"
         if not reason or self.registry.get_contract(agent_id).status.value == "review": return None
         evidence = {"metrics": metrics, "rules": rules, "latest_rag_evaluation": rag[0] if rag else None}
         self.store.execute("INSERT INTO degradation_events(agent_id,source,reason,metrics_json) VALUES(?,?,?,?)", (agent_id, "automatic", reason, json.dumps(evidence, default=str)))

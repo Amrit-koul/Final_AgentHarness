@@ -1,5 +1,6 @@
 import logging
 import json
+import re
 from string import Template
 from time import perf_counter
 from groq import Groq
@@ -12,6 +13,51 @@ from banking_agents.prompts import prompt_registry
 from banking_agents.evaluation.rag import build_citations, evaluate_rag_response
 
 logger = logging.getLogger(__name__)
+
+# ─── Small-talk / non-policy query detection ──────────────────────────────────
+# Queries that match these patterns are unsupported inputs, NOT policy failures.
+# They must NOT be run through RAG evaluation or trigger degradation monitoring.
+#
+# Rule: if the normalized query is a greeting, acknowledgement, or clearly
+# non-banking phrase, return a friendly redirect and skip evaluate_rag_response.
+#
+# This is intentionally conservative — only obvious non-policy inputs are caught
+# here. Ambiguous queries (e.g. "what is NPA?") are passed through to the full
+# RAG pipeline and evaluated normally.
+
+_SMALL_TALK_PATTERNS = re.compile(
+    r"""
+    ^(
+        # Greetings
+        hi+|hello+|hey+|howdy|hiya|greetings|good\s*(morning|afternoon|evening|day|night)|
+        # Acknowledgements / closings
+        thanks?|thank\s*you|ok(?:ay)?|sure|got\s*it|sounds?\s*good|great|cool|nice|
+        bye+|goodbye|see\s*ya|take\s*care|ciao|
+        # Identity / meta
+        who\s+are\s+you|what\s+are\s+you|are\s+you\s+(a\s+)?bot|are\s+you\s+ai|
+        what\s+(can|do)\s+you\s+do|help\s*me|
+        # Very short non-query tokens (handled separately by length check below)
+        test|ping|yo|sup
+    )
+    [\s!?.]*$
+    """,
+    re.IGNORECASE | re.VERBOSE,
+)
+
+_SMALL_TALK_FRIENDLY_RESPONSE = (
+    "Hello! I'm the Bank Policy Assistant. Please ask a banking policy question "
+    "and I'll answer using approved policy documents. "
+    "For example: 'What are the KYC requirements for opening a savings account?'"
+)
+
+
+def _is_small_talk(query: str) -> bool:
+    """Return True if the query is clearly non-policy small talk or unsupported input."""
+    q = query.strip()
+    # Very short queries (≤ 4 chars after stripping) are treated as non-policy
+    if len(q) <= 4:
+        return True
+    return bool(_SMALL_TALK_PATTERNS.match(q))
 
 
 class PolicyRAGAgent:
@@ -39,6 +85,24 @@ class PolicyRAGAgent:
         """Structured RAG response used by the control plane; ``answer`` remains compatible."""
         tracer = get_tracer()
         category = self._query_category(task)
+
+        # ── Small-talk / unsupported-input gate ───────────────────────────────
+        # If the query is clearly non-policy (greeting, ack, identity question),
+        # return a friendly redirect immediately.
+        # IMPORTANT: we do NOT call evaluate_rag_response here — there is no
+        # retrieval, no answer, and therefore no quality signal to record.
+        # This prevents a 0-score RAG evaluation from being stored and triggering
+        # rag_quality_degradation → lifecycle review for casual user input.
+        if _is_small_talk(task):
+            logger.info("[PolicyRAGAgent] Small-talk/non-policy query detected — skipping RAG pipeline. query=%r", task[:80])
+            return {
+                "answer": _SMALL_TALK_FRIENDLY_RESPONSE,
+                "citations": [],
+                "rag_evaluation": None,   # explicitly None — do not store or evaluate
+                "prompt_metadata": {"query_type": "unsupported_input"},
+            }
+        # ─────────────────────────────────────────────────────────────────────
+
         with tracer.span("policy_assistant_flow", inputs={"query_length": len(task)}, metadata={"query_category": category, "session_id": session_id}) as flow_span:
             with usage_context(trace_id=trace_id or None, agent_id="policy_assistant_agent", agent_name="Policy Assistant Agent", business_function="Policy Assistance"):
                 result = self._answer_impl(task, session_id, tracer, category)

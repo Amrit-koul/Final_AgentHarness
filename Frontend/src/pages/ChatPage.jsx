@@ -6,8 +6,12 @@ import {
   AppNav, StatusPill, Badge, IntentBadge,
   Spinner, Alert, fmtMs, truncate,
 } from '../components/Primitives';
-import AuditTrail from '../components/AuditTrail';
-import RagQualityGate from '../components/RagQualityGate';
+
+// ─── AuditTrail and RagQualityGate intentionally NOT imported ─────────────────
+// These components expose internal control-plane data (raw metric scores,
+// execution traces, debug/admin actions). They are available in the Control
+// Panel pages (/control/rag-quality, /control/audit) but must not appear in
+// the customer-facing Policy Assistant chat.
 
 const SUGGESTED = [
   { label: 'KYC & Onboarding',     text: 'What are the KYC requirements for opening a new savings account?' },
@@ -20,6 +24,120 @@ const SUGGESTED = [
 
 const MAX_Q = 2000;
 const MIN_Q = 5;
+
+// ─── RAG gate helpers ─────────────────────────────────────────────────────────
+
+/**
+ * Returns true if the RAG evaluation result indicates a BLOCK.
+ * Uses the backend's quality_gate field if present, otherwise derives from scores.
+ */
+function isRagBlocked(ragEvaluation) {
+  if (!ragEvaluation) return false;
+  if (ragEvaluation.quality_gate === 'BLOCK') return true;
+  // Derive locally if backend didn't set it explicitly
+  const values = [
+    ragEvaluation.groundedness_score,
+    ragEvaluation.semantic_similarity_score,
+    ragEvaluation.answer_relevance_score,
+    ragEvaluation.retrieved_evidence_coverage ?? ragEvaluation.citation_coverage,
+  ].filter(v => v != null);
+  return values.some(v => Number(v) < 0.4);
+}
+
+/**
+ * Returns true if citations/evidence exist — used to conditionally show
+ * the "Evidence-backed" governance badge.
+ */
+function hasEvidence(citations) {
+  return Array.isArray(citations) && citations.length > 0;
+}
+
+// ─── Governance badges ────────────────────────────────────────────────────────
+
+const BADGE_STYLE = {
+  display: 'inline-flex',
+  alignItems: 'center',
+  gap: 4,
+  fontSize: 10,
+  fontWeight: 600,
+  letterSpacing: '0.03em',
+  padding: '2px 8px',
+  borderRadius: 4,
+  border: '1px solid',
+};
+
+function GovernanceBadges({ ragEvaluation, citations, sessionId }) {
+  const governed = !!ragEvaluation;            // any eval present → governed
+  const evidenceBacked = hasEvidence(citations);
+  const traceRecorded = !!sessionId;
+
+  if (!governed && !evidenceBacked && !traceRecorded) return null;
+
+  return (
+    <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap', marginTop: 8, marginBottom: 4 }}>
+      {governed && (
+        <span style={{
+          ...BADGE_STYLE,
+          color: 'var(--success)',
+          borderColor: 'rgba(16,185,129,0.3)',
+          background: 'rgba(16,185,129,0.07)',
+        }}>
+          ✓ Governed response
+        </span>
+      )}
+      {evidenceBacked && (
+        <span style={{
+          ...BADGE_STYLE,
+          color: 'var(--corporate-blue)',
+          borderColor: 'rgba(23,92,211,0.25)',
+          background: 'rgba(23,92,211,0.06)',
+        }}>
+          ◈ Evidence-backed
+        </span>
+      )}
+      {traceRecorded && (
+        <span style={{
+          ...BADGE_STYLE,
+          color: 'var(--text-muted)',
+          borderColor: 'var(--border)',
+          background: 'var(--surface-inset)',
+        }}>
+          ⬡ Trace recorded
+        </span>
+      )}
+    </div>
+  );
+}
+
+// ─── Customer-facing citations ─────────────────────────────────────────────────
+// Shows document names only — no quality scores, no percentages.
+
+function CitationList({ citations }) {
+  if (!hasEvidence(citations)) return null;
+  // Extract unique source names
+  const sources = [...new Set(citations.map(c => c.source || c.document || c.filename || c).filter(Boolean))];
+  if (!sources.length) return null;
+  return (
+    <div style={{ marginTop: 10, fontSize: 11, color: 'var(--text-muted)' }}>
+      <span style={{ fontWeight: 600, marginRight: 6 }}>Sources:</span>
+      {sources.map((s, i) => (
+        <span key={i} style={{
+          display: 'inline-block',
+          marginRight: 6,
+          marginBottom: 3,
+          padding: '1px 7px',
+          background: 'var(--surface-inset)',
+          border: '1px solid var(--border)',
+          borderRadius: 3,
+          fontFamily: 'var(--font-mono)',
+          fontSize: 10,
+        }}>{s}</span>
+      ))}
+    </div>
+  );
+}
+
+// ─── Chat bubbles ──────────────────────────────────────────────────────────────
 
 function UserBubble({ text }) {
   return (
@@ -42,10 +160,8 @@ function UserBubble({ text }) {
 }
 
 function AiBubble({ msg, loading }) {
-  const [trailOpen, setTrailOpen] = useState(false);
-  const trail = msg?.auditTrail || [];
-  const hasTrail = trail.length > 0;
   const isLoan = msg?.intent === 'LOAN_ELIGIBILITY';
+  const blocked = isRagBlocked(msg?.ragEvaluation);
 
   return (
     <div style={{ display: 'flex', gap: 10, marginBottom: 16, animation: 'fadeIn 0.2s ease-out' }}>
@@ -65,12 +181,10 @@ function AiBubble({ msg, loading }) {
           <span style={{ fontSize: 10, fontFamily: 'var(--font-mono)', color: 'var(--text-muted)', background: 'var(--surface-inset)', border: '1px solid var(--border)', borderRadius: 3, padding: '1px 5px' }}>AI-generated</span>
         </div>
 
-        {!loading && <RagQualityGate evaluation={msg?.ragEvaluation} citations={msg?.citations} />}
-
         {/* Bubble */}
         <div style={{
           background: 'var(--surface)',
-          border: '1px solid var(--border)',
+          border: `1px solid ${blocked && !loading ? 'rgba(239,68,68,0.3)' : 'var(--border)'}`,
           borderRadius: '3px 12px 12px 12px',
           padding: '12px 16px',
           fontSize: 13, lineHeight: 1.7,
@@ -83,8 +197,27 @@ function AiBubble({ msg, loading }) {
             <span style={{ display: 'flex', gap: 6, alignItems: 'center', color: 'var(--text-muted)' }}>
               <Spinner size={13} /> Processing query…
             </span>
-          ) : msg?.text}
+          ) : blocked ? (
+            // Clean customer-facing block message — no raw metrics
+            <span style={{ color: 'var(--text-muted)', fontStyle: 'italic' }}>
+              I could not find enough supporting policy evidence to answer this safely.
+            </span>
+          ) : (
+            msg?.text
+          )}
         </div>
+
+        {/* Governance badges — only shown when not loading and not blocked */}
+        {!loading && !blocked && (
+          <GovernanceBadges
+            ragEvaluation={msg?.ragEvaluation}
+            citations={msg?.citations}
+            sessionId={msg?.sessionId}
+          />
+        )}
+
+        {/* Customer-facing citations — document names only, no scores */}
+        {!loading && !blocked && <CitationList citations={msg?.citations} />}
 
         {/* Loan redirect notice */}
         {!loading && isLoan && (
@@ -109,45 +242,7 @@ function AiBubble({ msg, loading }) {
           </div>
         )}
 
-        {/* Audit trail */}
-        {!loading && hasTrail && (
-          <div style={{ marginTop: 8 }}>
-            <button
-              onClick={() => setTrailOpen(v => !v)}
-              aria-expanded={trailOpen}
-              style={{
-                fontSize: 11, fontFamily: 'var(--font-mono)',
-                color: 'var(--text-muted)',
-                border: '1px solid var(--border)',
-                background: 'var(--surface)',
-                borderRadius: 4, padding: '3px 10px',
-                cursor: 'pointer',
-              }}
-            >
-              {trailOpen ? '▲' : '▼'} Execution trail ({trail.length} steps)
-            </button>
-
-            {trailOpen && (
-              <div style={{
-                marginTop: 6,
-                background: '#0F1E35',
-                border: '1px solid rgba(255,255,255,0.08)',
-                borderRadius: 8,
-                padding: '12px 14px',
-                animation: 'fadeIn 0.2s ease-out',
-              }}>
-                <AuditTrail
-                  trail={trail}
-                  sessionId={msg.sessionId}
-                  intent={msg.intent}
-                  stepCount={trail.length}
-                />
-              </div>
-            )}
-          </div>
-        )}
-
-        {/* Session ID */}
+        {/* Session ID — kept as a subtle footer for traceability, not debug */}
         {!loading && msg?.sessionId && (
           <div style={{ marginTop: 5, fontFamily: 'var(--font-mono)', fontSize: 9, color: 'var(--text-muted)' }}>
             session {msg.sessionId.slice(0, 12)}…
@@ -165,6 +260,8 @@ function ErrorBubble({ text }) {
     </div>
   );
 }
+
+// ─── Page ──────────────────────────────────────────────────────────────────────
 
 export default function ChatPage() {
   const backendStatus = useBackendHealth();
@@ -206,11 +303,11 @@ export default function ChatPage() {
       if (data.session_id) setSessionId(data.session_id);
       setMessages(prev => [...prev, {
         type: 'ai', text: data.final,
-        auditTrail: data.audit_trail || [],
         sessionId: data.session_id,
         intent: data.intent,
         ragEvaluation: data.rag_evaluation,
         citations: data.citations,
+        // audit_trail intentionally NOT stored — not shown in chat
       }]);
     } catch (e) {
       setMessages(prev => [...prev, { type: 'error', text: `Request failed: ${e.message}` }]);
