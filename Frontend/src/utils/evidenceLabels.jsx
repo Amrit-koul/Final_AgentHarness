@@ -7,7 +7,7 @@ export function SourceBadge({ source }) {
     'manual_validation': { label: 'Manual Validation', className: 'cc-badge warning' },
     'manual_admin': { label: 'Manual Validation', className: 'cc-badge warning' },
     'config': { label: 'Config', className: 'cc-badge neutral' },
-    'derived': { label: 'Derived', className: 'cc-badge neutral' },
+    'derived': { label: 'Calculated', className: 'cc-badge neutral' },
     'estimated': { label: 'Estimated', className: 'cc-badge neutral' },
     'persisted': { label: 'Current DB History', className: 'cc-badge info' },
     'seeded_portfolio': { label: 'Seeded Portfolio Data', className: 'cc-badge neutral' },
@@ -26,7 +26,7 @@ export function EnforcementBadge({ status }) {
     'runtime_enforced': { label: 'Runtime Enforced', className: 'cc-badge success' },
     'available_not_wired': { label: 'Available, Not Wired', className: 'cc-badge warning' },
     'config_only': { label: 'Config Only', className: 'cc-badge neutral' },
-    'not_returned': { label: 'Not Returned by Backend', className: 'cc-badge error' }
+    'not_returned': { label: 'Not Returned', className: 'cc-badge error' }
   };
   const normalizedStatus = status || 'not_returned';
   const display = map[normalizedStatus] || { label: String(status), className: 'cc-badge neutral' };
@@ -52,7 +52,7 @@ export function LLMJudgeBadge({ status }) {
 
 export function renderMissingField(field) {
   if (field === null || field === undefined || field === '') {
-    return <span className="cc-muted">Not returned by backend</span>;
+    return <span className="cc-muted">Not returned</span>;
   }
   return field;
 }

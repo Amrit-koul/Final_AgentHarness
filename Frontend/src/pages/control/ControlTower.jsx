@@ -24,7 +24,7 @@ export default function ControlTower() {
     };
   }, []);
   const state = useControlData(fetchDashboard, [], 5000);
-  if (state.loading || state.error) return <><PageHeader title="Control Tower" subtitle="Live estate health from the Agent Control Plane." /><LoadingState loading={state.loading} error={state.error} /></>;
+  if (state.loading || state.error) return <><PageHeader title="Control Tower" subtitle="Estate health from the Agent Control Plane." /><LoadingState loading={state.loading} error={state.error} /></>;
 
   const { agents, policy: rawPolicy, guardrails: rawGuardrails, kill: rawKill, degradation: rawDegradation, toolAuth: rawToolAuth } = state.data;
   
@@ -69,7 +69,7 @@ export default function ControlTower() {
 
   return (
     <>
-      <PageHeader title="Control Tower" subtitle="Bank-wide agent inventory, governance activity, and critical lifecycle events derived from control-plane APIs." right={
+      <PageHeader title="Control Tower" subtitle="Agent inventory, governance activity, and critical lifecycle events from control-plane APIs." right={
         <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
           <select className="cc-input" value={timeFilter} onChange={(e) => setTimeFilter(e.target.value)}>
             <option value="today">Today only</option>
@@ -80,14 +80,14 @@ export default function ControlTower() {
         </div>
       } />
       <KpiStrip items={[
-        { label: 'Total Agents (Config contracts)', value: agents.length }, 
-        { label: 'Active Agents (Derived)', value: active, accent: 'green' },
-        { label: 'Agents in Review (Derived)', value: review, accent: 'amber' }, 
-        { label: 'Disabled / Quarantined (Derived)', value: stopped, accent: 'red' },
-        { label: 'Tool Auth Blocks (Runtime evidence)', value: toolBlocks, accent: 'red' }, 
-        { label: 'Guardrail Events (Runtime evidence)', value: guardrails.length, accent: 'amber' },
-        { label: 'Kill Switch Events (Runtime evidence)', value: kill.length, accent: 'red' }, 
-        { label: 'Degraded Agents (Runtime evidence)', value: degradedIds.size, accent: 'amber' },
+        { label: 'Total Agents', value: agents.length }, 
+        { label: 'Active Agents', value: active, accent: 'green' },
+        { label: 'Agents in Review', value: review, accent: 'amber' }, 
+        { label: 'Disabled / Quarantined', value: stopped, accent: 'red' },
+        { label: 'Tool Auth Blocks', value: toolBlocks, accent: 'red' }, 
+        { label: 'Guardrail Events', value: guardrails.length, accent: 'amber' },
+        { label: 'Lifecycle Events', value: kill.length, accent: 'red' }, 
+        { label: 'Quality Alerts', value: degradedIds.size, accent: 'amber' },
       ]} />
       <div className="cc-grid-2 cc-top-gap">
         <SectionCard title="AI Estate Health by Business Function" subtitle="This card uses config metadata only.">

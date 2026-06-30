@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback } from 'react';
 import { Link, NavLink, Outlet } from 'react-router-dom';
 import { controlPlaneApi } from '../../services/controlPlaneApi';
 import { useControlData } from '../../hooks/useControlData';
@@ -17,7 +17,6 @@ const NAV_ITEMS = [
 ];
 
 export default function AppShell() {
-  const [demosOpen, setDemosOpen] = useState(false);
   const fetchAgents = useCallback(() => controlPlaneApi.listAgents(), []);
   const status = useControlData(fetchAgents, [], 10000);
   const connected = !status.loading && !status.error;
@@ -25,7 +24,7 @@ export default function AppShell() {
   return (
     <div className="cc-app">
       <aside className="cc-sidebar">
-        <div className="cc-brand"><strong>AI Operations<br />Control Centre</strong><span>Bandhan Bank · Agentic AI Platform</span></div>
+        <div className="cc-brand"><strong>AI Operations<br />Control Centre</strong></div>
         <nav className="cc-sidebar-nav">
           <div className="cc-nav-section-label">Platform</div>
           {NAV_ITEMS.map(([to, label, icon]) => (
@@ -34,15 +33,17 @@ export default function AppShell() {
             </NavLink>
           ))}
         </nav>
-        <div className="cc-demo-links">
-          <button className="cc-nav-link" onClick={() => setDemosOpen((value) => !value)}><span>Agent Fleet</span><span>{demosOpen ? '▾' : '▸'}</span></button>
-          {demosOpen && <div><Link to="/chat" className="cc-nav-link compact">Policy Assistant</Link><Link to="/loan-assessment" className="cc-nav-link compact">Loan Assessment</Link><Link to="/collections" className="cc-nav-link compact">Collections Agent</Link></div>}
+        <div className="cc-agent-fleet">
+          <div className="cc-agent-fleet-title">Agent Fleet</div>
+          <Link to="/chat" className="cc-fleet-link">Policy Assistant</Link>
+          <Link to="/loan-assessment" className="cc-fleet-link">Loan Assessment</Link>
+          <Link to="/collections" className="cc-fleet-link">Collections Agent</Link>
         </div>
       </aside>
       <div className="cc-main">
         <header className="cc-topheader">
           <strong>AI Operations Control Centre</strong>
-          <div className="cc-header-meta"><span>Client: Bandhan Bank</span><span className="cc-connection"><i className={connected ? 'online' : 'offline'} />{status.loading ? 'Checking backend' : connected ? 'Backend connected' : 'Backend unavailable'}</span></div>
+          <div className="cc-header-meta"><span className="cc-connection"><i className={connected ? 'online' : 'offline'} />{status.loading ? 'Checking services' : connected ? 'Services connected' : 'Services unavailable'}</span></div>
         </header>
         <main className="cc-content"><Outlet context={{ reloadShell: status.reload }} /></main>
       </div>

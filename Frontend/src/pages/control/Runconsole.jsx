@@ -10,7 +10,7 @@ const DEFAULT_PAYLOAD = {
   transcript: "Customer: I lost my job and cannot pay this month's EMI.",
 };
 
-const MODES = ['post_call', 'pre_call', 'full_lifecycle', 'voice_greet'];
+const MODES = ['post_call', 'pre_call', 'full_lifecycle'];
 
 function TruthTag({ label, tone }) {
   // Reuses the existing Chip component's color map purely for visual tone —
@@ -46,9 +46,9 @@ export default function RunConsole() {
   const fetchRelated = useCallback(async (id) => {
     if (!id) {
       setEvents(null);
-      setEventsError('No trace_id was returned by the backend — related events cannot be fetched.');
+      setEventsError('No trace_id was returned — related events cannot be fetched.');
       setPolicyRows(null);
-      setPolicyError('No trace_id was returned by the backend — related policy decisions cannot be fetched.');
+      setPolicyError('No trace_id was returned — related policy decisions cannot be fetched.');
       return;
     }
 
@@ -114,7 +114,7 @@ export default function RunConsole() {
     <>
       <PageHeader
         title="Run Console"
-        subtitle="Run Console executes the real Collections demo endpoint and then fetches trace-linked evidence from the control plane."
+        subtitle="Run Console executes the Collections workflow and then fetches trace-linked evidence from the control plane."
       />
 
       <SectionCard title="A. Request">
@@ -149,11 +149,11 @@ export default function RunConsole() {
             {running ? 'Running…' : 'Run'}
           </button>
         </div>
-        {runError && <div className="cc-empty cc-error" style={{ marginTop: 10 }}>Backend error: {runError}</div>}
+        {runError && <div className="cc-empty cc-error" style={{ marginTop: 10 }}>Run error: {runError}</div>}
       </SectionCard>
 
-      <SectionCard title="B. Backend Response" right={<TruthTag tone="completed" label="LIVE_BACKEND" />}>
-        {!response && !runError && <div className="cc-empty">No run yet. Click Run to call POST /api/v1/control/demo/run-collections.</div>}
+      <SectionCard title="B. Workflow Response" right={<TruthTag tone="completed" label="RUNTIME" />}>
+        {!response && !runError && <div className="cc-empty">No run yet. Click Run to execute the Collections workflow.</div>}
         {response && <JsonBlock value={response} />}
       </SectionCard>
 
@@ -163,21 +163,21 @@ export default function RunConsole() {
           <div className="cc-table-scroll">
             <table className="cc-table">
               <tbody>
-                <tr><td>trace_id</td><td className="mono">{display(response.trace_id, 'Not emitted by backend')}</td></tr>
-                <tr><td>agent_id</td><td className="mono">{display(response.agent_id, 'Not emitted by backend')}</td></tr>
+                <tr><td>trace_id</td><td className="mono">{display(response.trace_id, 'Not emitted')}</td></tr>
+                <tr><td>agent_id</td><td className="mono">{display(response.agent_id, 'Not emitted')}</td></tr>
                 {blocked ? (
                   <>
                     <tr><td>decision</td><td><Chip value={response.decision} /></td></tr>
-                    <tr><td>reason</td><td>{display(response.reason, 'Not emitted by backend')}</td></tr>
-                    <tr><td>status</td><td>{display(response.status, 'Not emitted by backend')}</td></tr>
-                    <tr><td>adapter_invoked</td><td>{String(response.adapter_invoked ?? 'Not emitted by backend')}</td></tr>
-                    <tr><td>policy_decision</td><td>{response.policy_decision ? <JsonBlock value={response.policy_decision} /> : 'Not emitted by backend'}</td></tr>
+                    <tr><td>reason</td><td>{display(response.reason, 'Not emitted')}</td></tr>
+                    <tr><td>status</td><td>{display(response.status, 'Not emitted')}</td></tr>
+                    <tr><td>adapter_invoked</td><td>{String(response.adapter_invoked ?? 'Not emitted')}</td></tr>
+                    <tr><td>policy_decision</td><td>{response.policy_decision ? <JsonBlock value={response.policy_decision} /> : 'Not emitted'}</td></tr>
                   </>
                 ) : (
                   <>
-                    <tr><td>workflow_status</td><td>{display(result?.workflow_status, 'Not emitted by backend')}</td></tr>
-                    <tr><td>status</td><td>{display(result?.status, 'Not emitted by backend')}</td></tr>
-                    <tr><td>control_evidence</td><td>{result?.control_evidence ? <JsonBlock value={result.control_evidence} /> : 'Not emitted by backend'}</td></tr>
+                    <tr><td>workflow_status</td><td>{display(result?.workflow_status, 'Not emitted')}</td></tr>
+                    <tr><td>status</td><td>{display(result?.status, 'Not emitted')}</td></tr>
+                    <tr><td>control_evidence</td><td>{result?.control_evidence ? <JsonBlock value={result.control_evidence} /> : 'Not emitted'}</td></tr>
                   </>
                 )}
               </tbody>
@@ -186,7 +186,7 @@ export default function RunConsole() {
         )}
       </SectionCard>
 
-      <SectionCard title="D. Related Audit Events" right={<TruthTag tone="completed" label="LIVE_BACKEND" />}>
+      <SectionCard title="D. Related Audit Events" right={<TruthTag tone="completed" label="RUNTIME" />}>
         {eventsLoading && <div className="cc-empty">Loading events for this trace…</div>}
         {!eventsLoading && eventsError && <div className="cc-empty">{eventsError}</div>}
         {!eventsLoading && events && events.length > 0 && (
@@ -210,7 +210,7 @@ export default function RunConsole() {
         {!eventsLoading && !eventsError && (!events || events.length === 0) && <div className="cc-empty">No events found for this trace.</div>}
       </SectionCard>
 
-      <SectionCard title="E. Related Policy Decisions" right={<TruthTag tone="completed" label="LIVE_BACKEND" />}>
+      <SectionCard title="E. Related Policy Decisions" right={<TruthTag tone="completed" label="RUNTIME" />}>
         {policyLoading && <div className="cc-empty">Loading policy decisions for this trace…</div>}
         {!policyLoading && policyRows && policyRows.length > 0 && (
           <div className="cc-table-scroll">
@@ -244,10 +244,10 @@ export default function RunConsole() {
         <div className="cc-table-scroll">
           <table className="cc-table">
             <tbody>
-              <tr><td>Backend response (Section B)</td><td><TruthTag tone="completed" label="LIVE_BACKEND" /></td></tr>
-              <tr><td>Trace events (Section D)</td><td><TruthTag tone="completed" label="LIVE_BACKEND" /></td></tr>
-              <tr><td>Policy decisions (Section E)</td><td><TruthTag tone="completed" label="LIVE_BACKEND" /></td></tr>
-              <tr><td>Missing fields shown as "Not emitted by backend"</td><td><TruthTag tone="review" label="NOT_EMITTED_BY_BACKEND" /></td></tr>
+              <tr><td>Workflow response (Section B)</td><td><TruthTag tone="completed" label="RUNTIME" /></td></tr>
+              <tr><td>Trace events (Section D)</td><td><TruthTag tone="completed" label="RUNTIME" /></td></tr>
+              <tr><td>Policy decisions (Section E)</td><td><TruthTag tone="completed" label="RUNTIME" /></td></tr>
+              <tr><td>Missing fields shown as "Not emitted"</td><td><TruthTag tone="review" label="NOT_EMITTED" /></td></tr>
               <tr><td>Section labels, agent description, hardship-review note</td><td><TruthTag tone="event_driven" label="STATIC_EXPLANATION" /></td></tr>
             </tbody>
           </table>

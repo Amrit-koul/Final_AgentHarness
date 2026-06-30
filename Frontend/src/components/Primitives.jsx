@@ -267,17 +267,7 @@ export function AppNav({ active }) {
         paddingRight: 24, marginRight: 8,
         borderRight: '1px solid rgba(255,255,255,0.1)',
       }}>
-        <div style={{
-          width: 28, height: 28,
-          background: 'var(--corporate-blue)',
-          borderRadius: 4,
-          display: 'flex', alignItems: 'center', justifyContent: 'center',
-          fontSize: 11, fontWeight: 700, color: 'white', letterSpacing: '-0.02em',
-        }}>BB</div>
-        <div>
-          <div style={{ fontSize: 12, fontWeight: 700, color: 'white', letterSpacing: '0.01em' }}>Bandhan Bank</div>
-          <div style={{ fontSize: 9, color: 'rgba(255,255,255,0.4)', fontFamily: 'var(--font-mono)', letterSpacing: '0.06em', textTransform: 'uppercase' }}>Agentic AI Platform</div>
-        </div>
+        <div style={{ fontSize: 12, fontWeight: 700, color: 'white', letterSpacing: '0.01em' }}>AI Operations</div>
       </div>
 
       {/* Links */}

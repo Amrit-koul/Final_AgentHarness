@@ -8,7 +8,7 @@ import { SourceBadge, EnforcementBadge, LLMJudgeBadge, renderMissingField } from
 // ─── Data truth label chip ────────────────────────────────────────────────────
 // Every column or section in this page is labelled with where the data comes from.
 const TRUTH_COLOURS = {
-  LIVE_BACKEND:        { bg: 'rgba(6,118,71,0.12)',   border: 'rgba(6,118,71,0.3)',   text: '#067647' },
+  RUNTIME:             { bg: 'rgba(6,118,71,0.12)',   border: 'rgba(6,118,71,0.3)',   text: '#067647' },
   DISPLAY_MAPPING:     { bg: 'rgba(46,111,216,0.10)', border: 'rgba(46,111,216,0.25)', text: '#2E6FD8' },
   CONFIG_STATUS:       { bg: 'rgba(220,130,0,0.12)',  border: 'rgba(220,130,0,0.3)',  text: '#B45309' },
   NOT_EMITTED_BY_PLUGIN:{ bg: 'rgba(100,100,100,0.10)', border: 'rgba(100,100,100,0.25)', text: 'var(--text-muted)' },
@@ -95,8 +95,8 @@ export default function Observability() {
 
       {/* Page-level data source notice */}
       <div style={{ margin: '0 0 16px 0', padding: '10px 14px', borderRadius: 6, background: 'var(--surface-inset)', border: '1px solid var(--border)', fontSize: 12, color: 'var(--text-muted)', display: 'flex', gap: 16, flexWrap: 'wrap', alignItems: 'center' }}>
-        <span><TruthBadge level="LIVE_BACKEND" /> events, runs, hooks — read directly from SQLite observability_events / agent_runs tables.</span>
-        <span><TruthBadge level="CONFIG_STATUS" /> LangSmith — integration status read from backend env / SDK at startup.</span>
+        <span><TruthBadge level="RUNTIME" /> events, runs, hooks — read from observability_events / agent_runs tables.</span>
+        <span><TruthBadge level="CONFIG_STATUS" /> LangSmith — integration status read from env / SDK at startup.</span>
         <span style={{ marginLeft: 'auto', fontStyle: 'italic' }}>This page is technical. HOOK_* names are shown as emitted — see Audit Trail for mapped business labels.</span>
       </div>
 
@@ -124,7 +124,7 @@ function RuntimeEvents({ rows, runs }) {
     <>
       <SectionCard
         title="Agent Runs"
-        subtitle={<><TruthBadge level="LIVE_BACKEND" /> Execution records from agent_runs table. One row per harness invocation.</>}
+        subtitle={<><TruthBadge level="RUNTIME" /> Execution records from agent_runs table. One row per harness invocation.</>}
       >
         {!runs.length
           ? <div className="cc-empty">No agent runs recorded yet. Run any agent to populate this view.</div>
@@ -147,7 +147,7 @@ function RuntimeEvents({ rows, runs }) {
       <SectionCard
         className="cc-top-gap"
         title="Runtime Observability Events"
-        subtitle={<><TruthBadge level="LIVE_BACKEND" /> Events from observability_events table. Excludes HOOK_* rows (shown in Hook Events tab).</>}
+        subtitle={<><TruthBadge level="RUNTIME" /> Events from observability_events table. Excludes HOOK_* rows (shown in Hook Events tab).</>}
       >
         {!rows.length
           ? <div className="cc-empty">No non-hook observability events recorded yet.</div>
@@ -178,7 +178,7 @@ function HookEvents({ rows }) {
       title="Hook Events"
       subtitle={
         <>
-          <TruthBadge level="LIVE_BACKEND" />{' '}
+          <TruthBadge level="RUNTIME" />{' '}
           Raw <code>HOOK_*</code> event names emitted by{' '}
           <code>agent_harness/primitives.py HookDispatcher.emit()</code>.{' '}
           These are shown here as emitted — the Audit Trail page maps them to business-readable labels.
@@ -220,7 +220,7 @@ function LatencyUsage({ runs, usage }) {
     <>
       <SectionCard
         title="Latency by Run"
-        subtitle={<><TruthBadge level="LIVE_BACKEND" /> Latency is recorded by the harness runtime for every invocation.</>}
+        subtitle={<><TruthBadge level="RUNTIME" /> Latency is recorded by the harness runtime for every invocation.</>}
       >
         {!runs.length
           ? <div className="cc-empty">No runs recorded yet.</div>
@@ -244,14 +244,14 @@ function LatencyUsage({ runs, usage }) {
       <SectionCard
         className="cc-top-gap"
         title="Usage / Cost Events"
-        subtitle="Provider, model, and token data — only shown when the backend emits it."
+        subtitle="Provider, model, and token data — shown when emitted by the runtime."
       >
         <div style={{ marginBottom: 10, padding: '8px 12px', borderRadius: 4, background: 'var(--surface-inset)', border: '1px solid var(--border)', fontSize: 12, color: 'var(--text-muted)' }}>
           <TruthBadge level="NOT_EMITTED_BY_PLUGIN" />{' '}
           <strong style={{ color: 'var(--text)' }}>Collections plugin:</strong>{' '}
           provider = <code>external</code>, model = <code>unknown</code> — the vendored plugin does not emit token or cost data through the harness usage layer.
           Latency is recorded.
-          {' '}<TruthBadge level="LIVE_BACKEND" />{' '}
+          {' '}<TruthBadge level="RUNTIME" />{' '}
           <strong style={{ color: 'var(--text)' }}>Groq-backed agents</strong> (Policy Assistant, Loan Assessment):{' '}
           emit real model + usage when GROQ_API_KEY is configured.
         </div>
@@ -287,7 +287,7 @@ function LatencyUsage({ runs, usage }) {
 
 // ─── Section D: LangSmith ─────────────────────────────────────────────────────
 const INTEGRATION_COLOURS = {
-  LIVE_BACKEND:              { bg: 'rgba(6,118,71,0.12)',   border: 'rgba(6,118,71,0.3)',   text: '#067647' },
+  RUNTIME:                   { bg: 'rgba(6,118,71,0.12)',   border: 'rgba(6,118,71,0.3)',   text: '#067647' },
   CONFIG_PRESENT_NOT_ENABLED:{ bg: 'rgba(220,130,0,0.12)',  border: 'rgba(220,130,0,0.3)',  text: '#B45309' },
   NOT_PRESENT:               { bg: 'rgba(100,100,100,0.10)',border: 'rgba(100,100,100,0.25)',text: 'var(--text-muted)' },
 };
@@ -304,14 +304,14 @@ function IntegrationBadge({ level }) {
 function LangSmithPanel({ ls, loading, error }) {
   if (loading) return <SectionCard title="LangSmith"><div className="cc-empty">Loading integration status…</div></SectionCard>;
   if (error)   return <SectionCard title="LangSmith"><div className="cc-empty" style={{ color: 'var(--error)' }}>Could not fetch observability status: {String(error)}</div></SectionCard>;
-  if (!ls)     return <SectionCard title="LangSmith"><div className="cc-empty">No status returned from backend.</div></SectionCard>;
+  if (!ls)     return <SectionCard title="LangSmith"><div className="cc-empty">No status returned.</div></SectionCard>;
 
   const level = ls.integration_level || 'NOT_PRESENT';
 
   return (
     <SectionCard
       title="LangSmith Integration"
-      subtitle={<><TruthBadge level="CONFIG_STATUS" /> Status is read from backend env / SDK at startup. No API keys are returned.</>}
+      subtitle={<><TruthBadge level="CONFIG_STATUS" /> Status is read from env / SDK at startup. No API keys are returned.</>}
     >
       {/* Integration level banner */}
       <div style={{ padding: '12px 16px', borderRadius: 6, background: 'var(--surface-inset)', border: '1px solid var(--border)', marginBottom: 16 }}>

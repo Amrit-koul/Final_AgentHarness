@@ -48,7 +48,7 @@ export default function AgenticPrimitives() {
   </>;
 }
 
-function Table({ title, subtitle, rows, columns, empty = 'No records returned by the backend.' }) { return <SectionCard title={title} subtitle={subtitle}>{rows.length === 0 ? <div className="cc-empty">{empty}</div> : <div className="cc-table-scroll"><table className="cc-table"><thead><tr>{columns.map((column) => <th key={column.label}>{column.label}</th>)}</tr></thead><tbody>{rows.map((row, index) => <tr key={row.id || row.skill_id || row.tool_id || row.memory_scope || row.hook_id || row.prompt_id || row.evaluator_id || index}>{columns.map((column) => <td key={column.label}>{column.render ? column.render(row) : renderMissingField(row[column.key])}</td>)}</tr>)}</tbody></table></div>}</SectionCard>; }
+function Table({ title, subtitle, rows, columns, empty = 'No records returned.' }) { return <SectionCard title={title} subtitle={subtitle}>{rows.length === 0 ? <div className="cc-empty">{empty}</div> : <div className="cc-table-scroll"><table className="cc-table"><thead><tr>{columns.map((column) => <th key={column.label}>{column.label}</th>)}</tr></thead><tbody>{rows.map((row, index) => <tr key={row.id || row.skill_id || row.tool_id || row.memory_scope || row.hook_id || row.prompt_id || row.evaluator_id || index}>{columns.map((column) => <td key={column.label}>{column.render ? column.render(row) : renderMissingField(row[column.key])}</td>)}</tr>)}</tbody></table></div>}</SectionCard>; }
 function Skills({ rows }) { return <Table title="Skills Catalog" subtitle="Registered, reusable capabilities referenced by agents." rows={rows} columns={[{ label: 'Skill ID', key: 'skill_id' }, { label: 'Name', key: 'name' }, { label: 'Owner', key: 'owner' }, { label: 'Version', key: 'version' }, { label: 'Business Function', key: 'business_function' }, { label: 'Risk Tier', render: (r) => <RiskChip level={r.risk_tier} /> }, { label: 'Status', render: (r) => <StatusChip status={r.status} /> }, { label: 'Agents using skill', render: (r) => list(r.agents) }]} />; }
 
 function Tools({ rows, events = [] }) { 
@@ -71,7 +71,7 @@ function Tools({ rows, events = [] }) {
         return ev ? <><DecisionChip decision={ev.decision} /> <span className="cc-muted">({fmtTime(ev.timestamp)})</span></> : <span className="cc-muted">No authorization event recorded</span>;
     } }, 
     { label: 'LLM Judge Available', render: (r) => {
-        if (!r.llm_judge) return <span className="cc-muted">Not returned by backend</span>;
+        if (!r.llm_judge) return <span className="cc-muted">Not returned</span>;
         return r.llm_judge.status === 'not_configured' ? <span className="cc-badge neutral">Not Configured</span> : <span className="cc-badge success">Configured</span>;
     } }
   ]} />; 
@@ -89,7 +89,7 @@ function ToolAuth({ rows }) {
     { label: 'Matched Policy', key: 'matched_policy' }, 
     { label: 'Approval Required', render: (r) => r.required_approval ? 'Yes' : 'No' }, 
     { label: 'LLM Judge Status', render: (r) => <LLMJudgeBadge status={r.llm_judge?.status} /> }, 
-    { label: 'LLM Judge Score', render: (r) => r.llm_judge ? renderMissingField(r.llm_judge.score) : <span className="cc-muted">Not returned by backend</span> }, 
+    { label: 'LLM Judge Score', render: (r) => r.llm_judge ? renderMissingField(r.llm_judge.score) : <span className="cc-muted">Not returned</span> }, 
     { label: 'Source', render: (r) => <SourceBadge source={r.source} /> }, 
     { label: 'Trace ID', key: 'trace_id' }
   ]} />; 

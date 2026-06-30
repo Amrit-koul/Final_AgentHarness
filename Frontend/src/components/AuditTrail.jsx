@@ -187,7 +187,7 @@ export default function AuditTrail() {
         }
       >
         <LoadingState loading={state.loading} error={state.error} empty={!state.loading && rows.length === 0}>
-          No audit events recorded. Run the Collections demo to populate this view.
+          No audit events recorded. Run Collections to populate this view.
         </LoadingState>
         {rows.length > 0 && (
           <div className="cc-table-scroll">

@@ -61,12 +61,6 @@ export const controlPlaneApi = {
       ...(capturedId ? { captured_transcript_id: capturedId } : {}),
       ...(transcript ? { transcript } : {}),
     }),
-  runCollectionsVoiceGreet: (accountId) =>
-    post('/demo/run-collections', { mode: 'voice_greet', account_id: accountId }),
-  getCollectionsVoiceStatus: () => request('/collections/voice/status'),
-  startCollectionsVoice: (accountId) => post('/collections/voice/start', { account_id: accountId }),
-  runCollectionsVoiceTurn: (body = {}) => post('/collections/voice/turn', body),
-  finalizeCollectionsVoice: (body = {}) => post('/collections/voice/finalize', body),
   listCollectionsAccounts: () => request('/demo/collections/accounts'),
   getCollectionsTranscripts: () => request('/collections/transcripts'),
   getCollectionsHistory: (accountId) =>

@@ -24,7 +24,7 @@ const PATTERNS = [
     adapter: 'python_function',
     entrypoint: 'package.module.function',
     governance: 'Full lifecycle, policy, guardrails, trace, audit, usage.',
-    caveat: 'Entrypoint must be importable from the backend Python path.',
+    caveat: 'Entrypoint must be importable from the application Python path.',
   },
   {
     name: 'LangGraph workflow',
@@ -38,7 +38,7 @@ const PATTERNS = [
     adapter: 'rest_api',
     entrypoint: 'https://vendor-host/invoke  (endpoint field)',
     governance: 'Policy + guardrail run before the HTTP call; result is audited.',
-    caveat: 'Demo endpoint is local/unauthenticated. Production requires auth_env_var.',
+    caveat: 'The local endpoint is unauthenticated. Production requires auth_env_var.',
   },
   {
     name: 'External webhook agent',
@@ -105,7 +105,7 @@ function RuntimeBoundary() {
   );
 }
 
-// ─── Contract viewer — fetches real data from backend ────────────────────────
+// ─── Contract viewer ────────────────────────
 
 function ContractViewer({ agentId }) {
   const fetcher = useCallback(() => controlPlaneApi.getContract(agentId), [agentId]);
@@ -124,7 +124,7 @@ function ContractViewer({ agentId }) {
       {/* Truth notice */}
       {_demo && (
         <div className="cc-notice info" style={{ marginBottom: '1rem' }}>
-          <strong>Demo contract.</strong> This agent exists to illustrate the REST adapter boundary.
+          <strong>Adapter contract.</strong> This agent exists to illustrate the REST adapter boundary.
           The vendor endpoint is a local mock service — not a production integration.
         </div>
       )}
@@ -247,7 +247,7 @@ function ContractViewer({ agentId }) {
       >
         <div className="cc-notice info" style={{ marginBottom: '0.75rem' }}>
           <strong>Read-only preview.</strong> This is the parsed manifest as loaded by the registry at startup.
-          To update a contract, edit the YAML file and restart the backend.
+          To update a contract, edit the YAML file and restart the service.
         </div>
         <JsonBlock value={contract} />
       </SectionCard>
@@ -275,10 +275,10 @@ export default function AgentContract() {
 
       {/* Truth statement */}
       <div className="cc-notice info" style={{ marginBottom: '1.5rem' }}>
-        <strong>How this works.</strong> Backend agents are loaded from YAML manifests at startup.
+        <strong>How this works.</strong> Agents are loaded from YAML manifests at startup.
         The harness uses the contract to enforce adapter boundary, runtime permissions, guardrail policy,
         lifecycle controls, and observability hooks. This page documents and previews those contracts —
-        it does not mutate the backend registry at runtime.
+        it does not mutate the registry at runtime.
       </div>
 
       {/* ── Section A: Contract Overview ── */}
@@ -337,7 +337,7 @@ export default function AgentContract() {
       {/* ── Section B2: Supported adapter patterns ── */}
       <SectionCard
         title="Supported Integration Patterns"
-        subtitle="Example contracts — these are illustrative, not production onboarding templates."
+        subtitle="Example contracts for implementation patterns and governance boundaries."
       >
         <div className="cc-table-scroll">
           <table className="cc-table">
@@ -365,10 +365,10 @@ export default function AgentContract() {
         </div>
       </SectionCard>
 
-      {/* ── Section C: Contract Preview — live from backend ── */}
+      {/* ── Section C: Contract Preview ── */}
       <SectionCard
         title="Contract Preview"
-        subtitle="Select a registered agent to view its live manifest contract from the backend."
+        subtitle="Select a registered agent to view its manifest contract."
         right={
           agents.length > 0 && (
             <Link className="cc-link-button" to="/control/agents">
@@ -378,15 +378,15 @@ export default function AgentContract() {
         }
       >
         <div className="cc-notice info" style={{ marginBottom: '1rem' }}>
-          <strong>Live data.</strong> Contracts are loaded from{' '}
-          <span className="mono">banking_agents/config/agents/*.yaml</span> at backend startup
+          <strong>Registry data.</strong> Contracts are loaded from{' '}
+          <span className="mono">banking_agents/config/agents/*.yaml</span> at service startup
           and stored in the <span className="mono">agent_contracts</span> table.
           Selecting an agent below calls{' '}
           <span className="mono">GET /api/v1/control/agents/&#123;id&#125;/contract</span>.
         </div>
 
         {agentsLoading && <div className="cc-empty">Loading registered agents…</div>}
-        {agentsError  && <div className="cc-empty cc-error">Cannot reach backend: {agentsError.message}</div>}
+        {agentsError  && <div className="cc-empty cc-error">Cannot load agents: {agentsError.message}</div>}
 
         {!agentsLoading && !agentsError && (
           <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'flex-end', flexWrap: 'wrap', marginBottom: '1rem' }}>
@@ -403,7 +403,6 @@ export default function AgentContract() {
                 {agents.map((a) => (
                   <option key={a.agent_id} value={a.agent_id}>
                     {a.name || a.agent_id}
-                    {a.metadata?.demo ? ' [demo]' : ''}
                   </option>
                 ))}
               </select>
@@ -429,13 +428,13 @@ export default function AgentContract() {
         <RuntimeBoundary />
       </SectionCard>
 
-      {/* ── Section E: Demo Adapter Test ── */}
+      {/* ── Section E: Adapter Test ── */}
       <SectionCard
-        title="Demo Adapter Test"
-        subtitle="Run the demo_vendor_rest_agent through the harness to observe the full adapter boundary. The local mock vendor service must be running on port 9001."
+        title="Adapter Test"
+        subtitle="Run the sample REST adapter through the harness to observe the full adapter boundary. The local mock vendor service must be running on port 9001."
       >
         <div className="cc-notice warning" style={{ marginBottom: '1rem' }}>
-          <strong>Demo only.</strong> This invokes the REST adapter test contract — not a real vendor.
+          <strong>Sample adapter.</strong> This invokes the REST adapter test contract, not a real vendor.
           Start the mock service (<span className="mono">banking_agents/external_plugins/mock_vendor_rest_agent/app.py</span>) before running.
         </div>
         <DemoAdapterTest />
@@ -447,7 +446,7 @@ export default function AgentContract() {
   );
 }
 
-// ─── Demo adapter test (extracted so it has its own state) ────────────────────
+// ─── Adapter test (extracted so it has its own state) ────────────────────
 
 function DemoAdapterTest() {
   const [run, setRun] = useState({ loading: false, result: null, error: null });
@@ -467,7 +466,7 @@ function DemoAdapterTest() {
   return (
     <>
       <button className="cc-button" onClick={execute} disabled={run.loading}>
-        {run.loading ? 'Running demo adapter test…' : 'Run Demo Adapter Test'}
+        {run.loading ? 'Running adapter test…' : 'Run Adapter Test'}
       </button>
       {run.error && (
         <div className="cc-notice warning cc-top-gap">

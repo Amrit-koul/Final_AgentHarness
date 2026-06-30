@@ -116,17 +116,17 @@ function ResultPanel({ result, profile, onReset, onViewHarness }) {
 }
 
 const INIT = {
-  loan_type: '',
-  applicant_age: '',
-  employment_type: '',
-  monthly_income: '',
-  cibil_score: '',
-  existing_emi_amount: '',
-  loan_amount_requested: '',
-  loan_tenure_months: '',
-  property_value: '',
-  annual_interest_rate_percent: '',
-  query: '',
+  loan_type: 'HOME',
+  applicant_age: '35',
+  employment_type: 'SALARIED',
+  monthly_income: '125000',
+  cibil_score: '782',
+  existing_emi_amount: '18000',
+  loan_amount_requested: '4500000',
+  loan_tenure_months: '240',
+  property_value: '6500000',
+  annual_interest_rate_percent: '8.75',
+  query: 'Assess eligibility for a salaried applicant with stable income, good repayment history, and an existing EMI obligation.',
 };
 
 export default function LoanAssessmentPage() {
@@ -200,8 +200,8 @@ export default function LoanAssessmentPage() {
             }}>Indicative Only</span>
           </div>
           <div style={{ fontSize: 13, color: 'var(--text-muted)', lineHeight: 1.6 }}>
-            Complete the form below for a structured indicative eligibility assessment.
-            This does not constitute a formal loan application or commitment by the bank.
+            The form is prefilled with a sample profile for a quick walkthrough. You can edit any value before running the assessment.
+            This does not constitute a formal loan application or commitment.
           </div>
         </div>
 
@@ -304,8 +304,8 @@ export default function LoanAssessmentPage() {
                 borderRadius: 6, fontSize: 11, color: 'var(--text-muted)', lineHeight: 1.6,
               }}>
                 By submitting this form, you acknowledge that the assessment is indicative only.
-                Assessment details and the resulting audit trail may be retained by the local harness.
-                Final eligibility is subject to the bank's underwriting policy.
+                Assessment details and the resulting audit trail may be retained for review.
+                Final eligibility is subject to underwriting policy.
               </div>
 
               <div style={{ marginTop: 20, display: 'flex', gap: 10, alignItems: 'center' }}>
@@ -323,7 +323,7 @@ export default function LoanAssessmentPage() {
                   onClick={() => { setForm(INIT); setErrs({}); setApiErr(''); }}
                   disabled={loading}
                 >
-                  Clear form
+                  Reset sample
                 </Btn>
               </div>
             </CardBody>

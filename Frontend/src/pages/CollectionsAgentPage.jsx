@@ -1,9 +1,9 @@
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { AppNav, Btn, Card, CardBody, CardHeader, FieldGroup, Select, Textarea, formatINR } from '../components/Primitives';
 import { controlPlaneApi } from '../services/controlPlaneApi';
 import { SourceBadge } from '../utils/evidenceLabels';
-import { DecisionChip, StatusChip } from '../components/control/Chips';
+import { StatusChip } from '../components/control/Chips';
 
 const SCORE_KEYS = ['ability_to_pay', 'intent_to_pay', 'trust', 'contactability', 'self_cure'];
 const SCORE_LABELS = { ability_to_pay: 'Ability to Pay', intent_to_pay: 'Intent to Pay', trust: 'Trust', contactability: 'Contactability', self_cure: 'Self Cure' };
@@ -51,18 +51,6 @@ export default function CollectionsAgentPage() {
   const [historyLoading, setHistoryLoading] = useState(false);
   const [historyData, setHistoryData] = useState(null);
   const [agentStatus, setAgentStatus] = useState(null);
-  const [voiceStatus, setVoiceStatus] = useState(null);
-  const [voiceLoading, setVoiceLoading] = useState(false);
-  const [voiceMessage, setVoiceMessage] = useState('');
-  const [voiceConversation, setVoiceConversation] = useState([]);
-  const [voiceFinalResult, setVoiceFinalResult] = useState(null);
-  const [recording, setRecording] = useState(false);
-  const [callActive, setCallActive] = useState(false);
-  const voiceConversationRef = useRef([]);
-  const recorderRef = useRef(null);
-  const streamRef = useRef(null);
-  const audioChunksRef = useRef([]);
-  const recordingStartRef = useRef(null);
 
   const [error, setError] = useState('');
   const selectedAcc = useMemo(() => accounts.find(a => a.id === selectedAccId), [accounts, selectedAccId]);
@@ -72,8 +60,6 @@ export default function CollectionsAgentPage() {
     controlPlaneApi.listCollectionsAccounts().then(res => setAccounts(res?.accounts || []));
     controlPlaneApi.getCollectionsTranscripts().then(res => setTranscripts(res?.transcripts || []));
     refreshAgentStatus();
-    refreshVoiceStatus();
-    return () => stopMediaStream();
   }, []);
 
   // When account changes, reset state and run pre-call automatically
@@ -81,22 +67,12 @@ export default function CollectionsAgentPage() {
     if (!selectedAccId) return;
     setPreCallResult(null);
     setPostCallResult(null);
-    setVoiceFinalResult(null);
-    setVoiceConversation([]);
-    voiceConversationRef.current = [];
-    setVoiceMessage('');
     setHistoryData(null);
     setActiveTab('workflow');
-    if (callActive) {
-      stopMediaStream();
-      setCallActive(false);
-      setRecording(false);
-    }
     
     runPreCall(selectedAccId);
     loadHistory(selectedAccId);
     refreshAgentStatus();
-    refreshVoiceStatus();
   }, [selectedAccId]);
 
   async function refreshAgentStatus() {
@@ -105,181 +81,6 @@ export default function CollectionsAgentPage() {
       setAgentStatus(res?.status || null);
     } catch {
       setAgentStatus(null);
-    }
-  }
-
-  async function refreshVoiceStatus() {
-    try {
-      const res = await controlPlaneApi.getCollectionsVoiceStatus();
-      setVoiceStatus(res);
-    } catch (err) {
-      setVoiceStatus({ ready: false, blocker: err.message || 'Voice status unavailable' });
-    }
-  }
-
-  function blobToBase64(blob) {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.onloadend = () => resolve(String(reader.result || '').split(',')[1] || '');
-      reader.onerror = reject;
-      reader.readAsDataURL(blob);
-    });
-  }
-
-  function playVoiceAudio(audioB64) {
-    if (!audioB64) return;
-    const audio = new Audio(`data:audio/mpeg;base64,${audioB64}`);
-    audio.play().catch(() => {});
-  }
-
-  function greetingFromStartResult(res) {
-    const payload = res?.greeting?.result || res?.greeting || {};
-    return payload?.greeting || payload;
-  }
-
-  // Opens the call: requests mic permission, plays ARIA's opening greeting,
-  // and arms the mic for hold-to-talk. Does NOT start recording by itself —
-  // the customer must press-and-hold the talk button for each turn.
-  async function startLiveVoice() {
-    if (!selectedAccId || !voiceStatus?.ready) return;
-    setVoiceLoading(true); setError(''); setVoiceMessage('Preparing live voice session...');
-    try {
-      if (!navigator.mediaDevices?.getUserMedia || typeof MediaRecorder === 'undefined') {
-        throw new Error('This browser does not support MediaRecorder microphone capture');
-      }
-      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-      streamRef.current = stream;
-
-      const start = await controlPlaneApi.startCollectionsVoice(selectedAccId);
-      const greeting = greetingFromStartResult(start);
-      const greetingText = greeting?.aria_text || '';
-      if (greetingText) {
-        const greetingTurns = [{ role: 'assistant', content: greetingText }];
-        voiceConversationRef.current = greetingTurns;
-        setVoiceConversation(greetingTurns);
-      }
-      playVoiceAudio(greeting?.audio_b64);
-
-      setCallActive(true);
-      setVoiceMessage('Call connected. Hold the talk button to speak as the customer.');
-    } catch (err) {
-      setError(err.message);
-      setVoiceMessage('');
-      stopMediaStream();
-    } finally {
-      setVoiceLoading(false);
-    }
-  }
-
-  function stopMediaStream() {
-    streamRef.current?.getTracks?.().forEach((track) => track.stop());
-    streamRef.current = null;
-  }
-
-  // Hold-to-talk: press and hold to record one customer turn, release to send it.
-  // This does NOT end the call — it just sends one turn and waits for the next hold.
-  async function startTurnRecording() {
-    if (!callActive || voiceLoading || recording) return;
-    try {
-      if (!streamRef.current) {
-        streamRef.current = await navigator.mediaDevices.getUserMedia({ audio: true });
-      }
-      const mimeType = MediaRecorder.isTypeSupported('audio/webm;codecs=opus') ? 'audio/webm;codecs=opus' : 'audio/webm';
-      const recorder = new MediaRecorder(streamRef.current, { mimeType });
-      audioChunksRef.current = [];
-      recordingStartRef.current = Date.now();
-      recorder.ondataavailable = (event) => {
-        if (event.data && event.data.size > 0) audioChunksRef.current.push(event.data);
-      };
-      recorder.onstop = () => handleTurnRecordingStopped();
-      recorderRef.current = recorder;
-      recorder.start();
-      setRecording(true);
-      setVoiceMessage('Recording... release to send');
-    } catch (err) {
-      setError(err.message);
-      setVoiceMessage('');
-    }
-  }
-
-  function stopTurnRecording() {
-    if (recorderRef.current && recorderRef.current.state !== 'inactive') {
-      recorderRef.current.stop();
-    }
-  }
-
-  // Called when the customer releases the hold-to-talk button. Sends exactly
-  // one turn to the backend and stays on the call — it does NOT finalize.
-  async function handleTurnRecordingStopped() {
-    setRecording(false);
-    const duration = Date.now() - (recordingStartRef.current || 0);
-    if (duration < 800) {
-      setVoiceMessage('Hold the button a little longer and speak clearly.');
-      audioChunksRef.current = [];
-      recorderRef.current = null;
-      return;
-    }
-    setVoiceLoading(true); setError('');
-    try {
-      const blob = new Blob(audioChunksRef.current, { type: 'audio/webm' });
-      if (!blob.size) throw new Error('No microphone audio was captured');
-      const audio_b64 = await blobToBase64(blob);
-      const turn = await controlPlaneApi.runCollectionsVoiceTurn({
-        account_id: selectedAccId,
-        audio_b64,
-        conversation: voiceConversationRef.current,
-      });
-      if (!turn.transcript) {
-        setVoiceMessage('No speech detected — hold the button longer and speak clearly.');
-        return;
-      }
-      const nextConversation = [
-        ...voiceConversationRef.current,
-        { role: 'user', content: turn.transcript || '' },
-        { role: 'assistant', content: turn.aria_text || '' },
-      ].filter((turnItem) => turnItem.content);
-      voiceConversationRef.current = nextConversation;
-      setVoiceConversation(nextConversation);
-      playVoiceAudio(turn.audio_b64);
-      setVoiceMessage('Hold the button to reply, or end the call when finished.');
-    } catch (err) {
-      setError(err.message);
-      setVoiceMessage('');
-    } finally {
-      setVoiceLoading(false);
-      audioChunksRef.current = [];
-      recorderRef.current = null;
-    }
-  }
-
-  // Explicit end-of-call action: stops the mic and runs governed finalization
-  // exactly once, over the full multi-turn conversation collected so far.
-  async function endLiveVoiceCall() {
-    stopTurnRecording();
-    stopMediaStream();
-    setCallActive(false);
-    if (!voiceConversationRef.current.length) {
-      setVoiceMessage('');
-      return;
-    }
-    setVoiceLoading(true); setError('');
-    setVoiceMessage('Call ended. Running governed post-call finalization...');
-    try {
-      const finalResult = await controlPlaneApi.finalizeCollectionsVoice({
-        account_id: selectedAccId,
-        conversation: voiceConversationRef.current,
-      });
-      setVoiceFinalResult(finalResult);
-      setPostCallResult(finalResult);
-      loadHistory(selectedAccId);
-      refreshAgentStatus();
-      refreshVoiceStatus();
-      setVoiceMessage('Live voice finalized through post-call governance.');
-    } catch (err) {
-      setError(err.message);
-      setVoiceMessage('');
-    } finally {
-      setVoiceLoading(false);
     }
   }
 
@@ -345,14 +146,14 @@ export default function CollectionsAgentPage() {
       {error && <div className="collections-error">{error}</div>}
 
       <div style={{ marginBottom: 24 }}>
-        <h3>A. Case Portfolio <small className="collections-muted" style={{ fontWeight: 'normal', fontSize: 13 }}>(source: seeded_portfolio)</small></h3>
+          <h3>A. Case Portfolio</h3>
         <Card><CardBody>
           <div className="collections-account-strip">
             {accounts.map(acc => (
               <button key={acc.id} className={`collections-account-card ${selectedAccId === acc.id ? 'selected' : ''}`} onClick={() => setSelectedAccId(acc.id)}>
                 <strong>{acc.name}</strong><small>{acc.id}</small>
                 <div className="collections-account-metrics"><span><b>{acc.dpd}</b> DPD</span></div>
-                <span className="collections-muted" style={{ fontSize: 11 }}>source: seeded_portfolio</span>
+                <span className="collections-muted" style={{ fontSize: 11 }}>Prepared case data</span>
               </button>
             ))}
           </div>
@@ -377,7 +178,7 @@ export default function CollectionsAgentPage() {
           <div className="collections-tab-content" style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
             
             <section>
-              <h3>B. Pre-Call Intelligence</h3>
+              <h3>B. Account Intelligence</h3>
               {preCallLoading ? <div className="collections-empty">Running pre-call rules...</div> : (
                 <div className="collections-two-col">
                   <Card><CardHeader title="Five-Score Engine" subtitle={preCallEvidence?.scoring_method} /><CardBody>
@@ -400,52 +201,8 @@ export default function CollectionsAgentPage() {
             </section>
 
             <section>
-              <h3>C. Voice / Transcript Stage</h3>
-              <Card><CardHeader title="Live Collections Voice" subtitle={voiceStatus?.provider ? `Provider: ${voiceStatus.provider}` : 'Checking backend voice readiness'} /><CardBody>
-                {voiceStatus?.ready ? (
-                  <>
-                    <div className="collections-muted" style={{ marginBottom: 12 }}>
-                      Browser microphone audio is sent to the governed backend as MediaRecorder audio/webm, transcribed by STT, and finalized through post-call governance once the call ends.
-                    </div>
-                    <div style={{ display: 'flex', gap: 10, alignItems: 'center', flexWrap: 'wrap' }}>
-                      {!callActive ? (
-                        <Btn onClick={startLiveVoice} loading={voiceLoading} disabled={voiceLoading || reviewBlocked}>Start Call</Btn>
-                      ) : (
-                        <>
-                          <Btn
-                            onMouseDown={startTurnRecording}
-                            onMouseUp={stopTurnRecording}
-                            onMouseLeave={() => recording && stopTurnRecording()}
-                            onTouchStart={(e) => { e.preventDefault(); startTurnRecording(); }}
-                            onTouchEnd={(e) => { e.preventDefault(); stopTurnRecording(); }}
-                            disabled={voiceLoading}
-                          >
-                            {recording ? '🎙 Recording... release to send' : voiceLoading ? 'Processing...' : '🎙 Hold to Talk'}
-                          </Btn>
-                          <Btn onClick={endLiveVoiceCall} disabled={voiceLoading && recording}>📵 End Call</Btn>
-                        </>
-                      )}
-                      <StatusChip status={callActive ? (recording ? 'active' : 'ready') : 'idle'} />
-                    </div>
-                    {voiceMessage && <div className="cc-notice" style={{ marginTop: 12 }}>{voiceMessage}</div>}
-                    {voiceConversation.length > 0 && (
-                      <div style={{ marginTop: 14 }}>
-                        <strong>Live Transcript</strong>
-                        <div className="collections-inline-json" style={{ marginTop: 8 }}>
-                          {voiceConversation.map((turn, index) => `${turn.role === 'user' ? 'Customer' : 'ARIA'}: ${turn.content}`).join('\n')}
-                        </div>
-                      </div>
-                    )}
-                    {voiceFinalResult && <div className="cc-notice success" style={{ marginTop: 12 }}>Live voice post-call output is shown in sections D-F below.</div>}
-                  </>
-                ) : (
-                  <div className="cc-notice warning">
-                    Live voice is disabled until the backend can process browser audio. {voiceStatus?.blocker || 'Voice backend status is unavailable.'}
-                  </div>
-                )}
-              </CardBody></Card>
-              <div style={{ height: 16 }} />
-              <Card><CardHeader title="Transcript Selection" /><CardBody>
+              <h3>C. Transcript Analysis</h3>
+              <Card><CardHeader title="Transcript Selection" subtitle="Choose a prepared transcript or paste text for post-interaction analysis." /><CardBody>
                 <div className="collections-two-col">
                   <div>
                     <FieldGroup label="Select Captured Transcript">
@@ -461,7 +218,7 @@ export default function CollectionsAgentPage() {
                   <div>
                     <FieldGroup label="Transcript Text">
                       <Textarea 
-                        value={selectedTransId ? 'Captured transcript selected. The backend resolves the stored transcript by ID and extracts evidence server-side.' : customText}
+                        value={selectedTransId ? 'Prepared transcript selected. The analysis service resolves the stored transcript and extracts evidence.' : customText}
                         onChange={(e) => setCustomText(e.target.value)}
                         disabled={!!selectedTransId}
                         placeholder="Paste raw conversation text here..."
@@ -472,7 +229,7 @@ export default function CollectionsAgentPage() {
                 </div>
                 <div style={{ marginTop: 20, textAlign: 'right' }}>
                   <Btn onClick={runPostCall} loading={postCallLoading} disabled={!selectedTransId && !customText.trim()}>
-                    Run Post-Call Analysis
+                    Run Transcript Analysis
                   </Btn>
                 </div>
               </CardBody></Card>
@@ -481,20 +238,20 @@ export default function CollectionsAgentPage() {
             {postCallResult && (
               <>
                 <section>
-                  <div className="collections-two-col">
+                  <div className="collections-analysis-grid">
                     <div>
-                      <h3>D. Post-Call Analysis</h3>
+                      <h3>D. Transcript Analysis</h3>
                       <Card><CardHeader title="LLM Transcript Extraction" subtitle={`Source: ${postCallEvidence?.extraction_method || 'llm_extraction'}`} /><CardBody>
                         <div style={{ marginBottom: 12 }}><SourceBadge source={postCallEvidence?.evidence_source || transcriptAnalysis?.evidence_source || 'not_returned'} /></div>
                         <Details data={transcriptAnalysis} keys={['intent', 'sentiment', 'stress_score', 'life_event_detected', 'life_event_type', 'ptp_signal', 'ptp_date', 'ptp_amount', 'negotiation_signal', 'hostile_signal']} />
-                        <div style={{ marginTop: 15, padding: 10, background: '#F1F5F9', color: '#334155', borderRadius: 6, fontSize: 13, border: '1px solid #CBD5E1' }}>
-                          <strong>Call Outcome / Agent Guidance:</strong> {transcriptAnalysis?.agent_guidance || 'No guidance generated'}
+                        <div className="collections-guidance-box">
+                          <strong>Outcome / Agent Guidance:</strong> {transcriptAnalysis?.agent_guidance || 'No guidance generated'}
                         </div>
                       </CardBody></Card>
                     </div>
                     <div>
                       <h3>E. Updates</h3>
-                      <Card><CardHeader title="Post-Call Pipeline Updates" subtitle="Scores, Persona, Trust Gate" /><CardBody>
+                      <Card><CardHeader title="Analysis Pipeline Updates" subtitle="Scores, Persona, Trust Gate" /><CardBody>
                         <Details data={updates} keys={['persona_before_label', 'persona_applied', 'recommended_action', 'review_required', 'business_assessment']} />
                         {updates?.review_triggers?.length > 0 && (
                           <div className="collections-alert-box" style={{ marginTop: 10 }}>

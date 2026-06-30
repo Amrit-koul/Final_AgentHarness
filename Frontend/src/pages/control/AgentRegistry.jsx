@@ -9,12 +9,17 @@ import { renderMissingField, EnforcementBadge, LLMJudgeBadge } from '../../utils
 
 function ContractDrawer({ agentId, onClose }) {
   const fetchDetails = useCallback(async () => {
-    const [contract, health, toolAuth, policy, guardrails] = await Promise.all([
-      controlPlaneApi.getContract(agentId), 
-      controlPlaneApi.getHealth(agentId), 
-      controlPlaneApi.listToolAuthorizationEvents(),
-      controlPlaneApi.listPolicyDecisions(),
-      controlPlaneApi.listGuardrailEvents()
+    let contract;
+    try {
+      contract = await controlPlaneApi.getContract(agentId);
+    } catch {
+      contract = await controlPlaneApi.getAgent(agentId);
+    }
+    const [health, toolAuth, policy, guardrails] = await Promise.all([
+      controlPlaneApi.getHealth(agentId).catch(() => null),
+      controlPlaneApi.listToolAuthorizationEvents().catch(() => ({ events: [] })),
+      controlPlaneApi.listPolicyDecisions().catch(() => ({ decisions: [] })),
+      controlPlaneApi.listGuardrailEvents().catch(() => ({ events: [] })),
     ]);
     return { 
       contract, 
@@ -26,7 +31,7 @@ function ContractDrawer({ agentId, onClose }) {
   }, [agentId]);
   
   const state = useControlData(fetchDetails, [agentId]);
-  const contract = state.data?.contract;
+  const contract = normalizeContract(state.data?.contract);
   const toolAuth = state.data?.toolAuth || [];
   const policy = state.data?.policy || [];
   const guardrails = state.data?.guardrails || [];
@@ -40,10 +45,10 @@ function ContractDrawer({ agentId, onClose }) {
     if (status === 'config_only') return 'Declared in manifest; runtime interception is not yet wired for this flow.';
     if (status === 'available_not_wired') return 'Authorization boundary exists, but this flow has not been routed through it yet.';
     if (status === 'runtime_enforced') return 'Authorization enforced by control plane.';
-    return 'Not returned by backend.';
+    return 'Not returned.';
   };
 
-  const arraySections = ['prompts'];
+  const arraySections = ['skills', 'tools', 'prompts', 'guardrails'];
   const objectSections = ['input_schema', 'output_schema', 'state_schema', 'memory_schema', 'model_preferences', 'observability_hooks', 'metrics'];
   
   return (
@@ -53,7 +58,7 @@ function ContractDrawer({ agentId, onClose }) {
         <dl className="cc-detail-grid">
           {['agent_id', 'owner', 'business_function', 'agent_type', 'execution_mode', 'adapter_type', 'entrypoint', 'endpoint', 'version'].filter((key) => contract[key] != null && contract[key] !== '').map((key) => <React.Fragment key={key}><dt>{key.replaceAll('_', ' ')}</dt><dd>{display(contract[key])}</dd></React.Fragment>)}
           <dt>Status</dt><dd><StatusChip status={contract.status} /></dd>
-          <dt>Health</dt><dd><HealthChip health={state.data.health?.status} /></dd>
+          <dt>Health</dt><dd><HealthChip health={state.data?.health?.status} /></dd>
           {contract.latest_kill_switch_event && <><dt>Latest lifecycle reason</dt><dd>{display(contract.latest_kill_switch_event.reason)} ({display(contract.latest_kill_switch_event.trigger)})</dd><dt>Lifecycle timestamp</dt><dd>{display(contract.latest_kill_switch_event.timestamp)}</dd></>}
         </dl>
 
@@ -69,7 +74,7 @@ function ContractDrawer({ agentId, onClose }) {
             <dd>{contract.policy_permissions?.allowed_data_scopes?.length ? contract.policy_permissions.allowed_data_scopes.join(', ') : renderMissingField()}</dd>
             
             <dt>Human Approval Reqs</dt>
-            <dd>{contract.guardrails?.some(g => g.requires_human_approval) ? 'Required for certain actions' : 'Not required'}</dd>
+            <dd>{contract.policy_permissions?.requires_human_approval_for?.length ? contract.policy_permissions.requires_human_approval_for.join(', ') : 'Not required'}</dd>
             
             <dt>Runtime Auth Status</dt>
             <dd>
@@ -114,6 +119,52 @@ function ContractDrawer({ agentId, onClose }) {
       </>}
     </Drawer>
   );
+}
+
+function normalizeContract(payload) {
+  if (!payload) return null;
+  const c = payload.contract || payload;
+  if (!c.identity && !c.adapter && !c.schemas && !c.capabilities && !c.permissions) {
+    return c;
+  }
+
+  const identity = c.identity || {};
+  const adapter = c.adapter || {};
+  const schemas = c.schemas || {};
+  const capabilities = c.capabilities || {};
+  const permissions = c.permissions || {};
+  const observability = c.observability || {};
+  const lifecycle = c.lifecycle || {};
+
+  return {
+    agent_id: identity.agent_id || payload.agent_id,
+    name: identity.name,
+    description: identity.description,
+    version: identity.version,
+    owner: identity.owner,
+    business_function: identity.business_function,
+    agent_type: identity.agent_type,
+    execution_mode: identity.execution_mode,
+    status: lifecycle.status,
+    default_status: lifecycle.default_status,
+    adapter_type: adapter.adapter_type,
+    entrypoint: adapter.entrypoint,
+    endpoint: adapter.endpoint,
+    input_schema: schemas.input_schema,
+    output_schema: schemas.output_schema,
+    state_schema: schemas.state_schema,
+    memory_schema: schemas.memory_schema,
+    skills: capabilities.skills || [],
+    tools: capabilities.tools || [],
+    prompts: capabilities.prompts || [],
+    model_preferences: capabilities.model_preferences || {},
+    policy_permissions: permissions.policy_permissions || {},
+    allowed_data_scopes: permissions.allowed_data_scopes || [],
+    guardrails: c.guardrails || [],
+    observability_hooks: observability.hooks || {},
+    metadata: c.metadata || {},
+    source_file: payload.source_file,
+  };
 }
 
 export default function AgentRegistry() {

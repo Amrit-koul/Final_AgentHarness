@@ -98,7 +98,7 @@ export default function KillSwitchDegradation() {
   const [notice, setNotice] = useState(null);
   const [agentId, setAgentId] = useState('collections_workflow_agent');
   const [open, setOpen] = useState(false);
-  const [override, setOverride] = useState({ status: 'active', reason: 'manual_review_completed_after_quality_check', approved_by: 'demo_admin', override_type: 'reactivate_after_review' });
+  const [override, setOverride] = useState({ status: 'active', reason: 'manual_review_completed_after_quality_check', approved_by: 'ops_admin', override_type: 'reactivate_after_review' });
 
   const fetchData = useCallback(async () => {
     const [agents, kill, degradation, policy, guardrails, evaluations] = await Promise.all([
