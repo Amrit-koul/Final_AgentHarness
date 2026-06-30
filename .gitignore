@@ -16,8 +16,9 @@ __pycache__/
 .vscode/
 .idea/
 
-# Database / Local Storage
-chroma_db/
-Backend/data/*.db
-Backend/data/*.db-*
+# Database / Local Storage — included intentionally for demo seeding
+# chroma_db/ — kept: vector store with pre-ingested policy docs
+# Backend/data/*.db — kept: seeded SQLite control plane + audit data
+Backend/data/*.db-shm
+Backend/data/*.db-wal
 Backend/logs/*.jsonl
